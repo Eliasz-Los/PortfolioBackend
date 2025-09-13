@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "ndJyEroMQ2A=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\C#_dotnet\\Portfolio\\PortfolioBackend\\Domain\\Domain.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\peril\\.nuget\\packages\\sixlabors.imagesharp\\3.1.11\\sixlabors.imagesharp.3.1.11.nupkg.sha512"
+  ],
+  "logs": []
+}

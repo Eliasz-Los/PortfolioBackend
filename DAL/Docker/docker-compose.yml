@@ -1,0 +1,19 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: "portfolio_db"
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "postgres"
+    ports:
+      - "54326:5432"
+    volumes:
+      - ./portfolio_db/postgres/data:/var/lib/postgresql/data
+    networks:
+      - postgres_network
+
+networks:
+  postgres_network:
+    driver: bridge
