@@ -1,0 +1,5 @@
+@PortfolioBackend_HostAddress = http://localhost:5266
+
+GET {{PortfolioBackend_HostAddress}}/api/Floorplan/floorplans
+Accept: application/json
+

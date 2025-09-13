@@ -1,0 +1,15 @@
+C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\DAL\bin\Debug\net9.0\DAL.deps.json
+C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\DAL\bin\Debug\net9.0\DAL.dll
+C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\DAL\bin\Debug\net9.0\DAL.pdb
+C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\DAL\bin\Debug\net9.0\Domain.dll
+C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\DAL\bin\Debug\net9.0\Domain.pdb
+C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\DAL\obj\Debug\net9.0\DAL.csproj.AssemblyReference.cache
+C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\DAL\obj\Debug\net9.0\DAL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\DAL\obj\Debug\net9.0\DAL.AssemblyInfoInputs.cache
+C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\DAL\obj\Debug\net9.0\DAL.AssemblyInfo.cs
+C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\DAL\obj\Debug\net9.0\DAL.csproj.CoreCompileInputs.cache
+C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\DAL\obj\Debug\net9.0\DAL.csproj.Up2Date
+C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\DAL\obj\Debug\net9.0\DAL.dll
+C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\DAL\obj\Debug\net9.0\refint\DAL.dll
+C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\DAL\obj\Debug\net9.0\DAL.pdb
+C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\DAL\obj\Debug\net9.0\ref\DAL.dll
