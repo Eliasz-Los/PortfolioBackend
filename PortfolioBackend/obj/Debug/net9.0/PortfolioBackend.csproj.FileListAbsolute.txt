@@ -57,3 +57,4 @@ C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\Portf
 C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\PortfolioBackend\obj\Debug\net9.0\PortfolioBackend.pdb
 C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\PortfolioBackend\obj\Debug\net9.0\PortfolioBackend.genruntimeconfig.cache
 C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\PortfolioBackend\obj\Debug\net9.0\ref\PortfolioBackend.dll
+C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\PortfolioBackend\obj\Debug\net9.0\PortfolioBackend.sourcelink.json

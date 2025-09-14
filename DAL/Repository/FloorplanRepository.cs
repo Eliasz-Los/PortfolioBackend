@@ -16,4 +16,11 @@ public class FloorplanRepository
     {
         return _context.Floorplans;
     }
+
+    public Floorplan ReadFloorplanByNameAndFloor(string name, int floorNumber)
+    {
+        Floorplan floorplan = _context.Floorplans.FirstOrDefault(fp => fp.Name == name && fp.FloorNumber == floorNumber);
+
+        return floorplan;
+    }
 }
