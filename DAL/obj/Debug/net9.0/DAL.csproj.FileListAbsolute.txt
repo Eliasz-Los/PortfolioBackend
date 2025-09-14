@@ -13,3 +13,4 @@ C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\DAL\o
 C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\DAL\obj\Debug\net9.0\refint\DAL.dll
 C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\DAL\obj\Debug\net9.0\DAL.pdb
 C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\DAL\obj\Debug\net9.0\ref\DAL.dll
+C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\DAL\obj\Debug\net9.0\DAL.sourcelink.json
