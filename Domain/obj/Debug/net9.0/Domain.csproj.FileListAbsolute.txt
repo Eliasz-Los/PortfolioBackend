@@ -10,3 +10,4 @@ C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\Domai
 C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\Domain\obj\Debug\net9.0\refint\Domain.dll
 C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\Domain\obj\Debug\net9.0\Domain.pdb
 C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\Domain\obj\Debug\net9.0\ref\Domain.dll
+C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\Domain\obj\Debug\net9.0\Domain.sourcelink.json

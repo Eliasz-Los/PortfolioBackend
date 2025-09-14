@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{8763E197-193C-4F33-9B36-957C062524FE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectTesting", "ProjectTesting\ProjectTesting.csproj", "{1EB9B43B-6305-419D-921C-C99F663746AC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{8763E197-193C-4F33-9B36-957C062524FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8763E197-193C-4F33-9B36-957C062524FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8763E197-193C-4F33-9B36-957C062524FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EB9B43B-6305-419D-921C-C99F663746AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EB9B43B-6305-419D-921C-C99F663746AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EB9B43B-6305-419D-921C-C99F663746AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EB9B43B-6305-419D-921C-C99F663746AC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

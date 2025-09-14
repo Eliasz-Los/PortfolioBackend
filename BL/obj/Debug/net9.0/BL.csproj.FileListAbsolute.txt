@@ -15,3 +15,4 @@ C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\BL\ob
 C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\BL\obj\Debug\net9.0\refint\BL.dll
 C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\BL\obj\Debug\net9.0\BL.pdb
 C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\BL\obj\Debug\net9.0\ref\BL.dll
+C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\BL\obj\Debug\net9.0\BL.sourcelink.json
