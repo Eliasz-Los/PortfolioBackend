@@ -794,11 +794,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\C#_dotnet\\Portfolio\\PortfolioBackend\\BL\\BL.csproj",
+      "projectUniqueName": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\BL\\BL.csproj",
       "projectName": "BL",
-      "projectPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\C#_dotnet\\Portfolio\\PortfolioBackend\\BL\\BL.csproj",
+      "projectPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\BL\\BL.csproj",
       "packagesPath": "C:\\Users\\peril\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\C#_dotnet\\Portfolio\\PortfolioBackend\\BL\\obj\\",
+      "outputPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\BL\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\peril\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -813,11 +813,11 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Users\\peril\\Documents\\OsobneRzeczy\\C#_dotnet\\Portfolio\\PortfolioBackend\\DAL\\DAL.csproj": {
-              "projectPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\C#_dotnet\\Portfolio\\PortfolioBackend\\DAL\\DAL.csproj"
+            "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\DAL\\DAL.csproj": {
+              "projectPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\DAL\\DAL.csproj"
             },
-            "C:\\Users\\peril\\Documents\\OsobneRzeczy\\C#_dotnet\\Portfolio\\PortfolioBackend\\Domain\\Domain.csproj": {
-              "projectPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\C#_dotnet\\Portfolio\\PortfolioBackend\\Domain\\Domain.csproj"
+            "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\Domain\\Domain.csproj": {
+              "projectPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\Domain\\Domain.csproj"
             }
           }
         }

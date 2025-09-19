@@ -742,11 +742,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\C#_dotnet\\Portfolio\\PortfolioBackend\\DAL\\DAL.csproj",
+      "projectUniqueName": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\DAL\\DAL.csproj",
       "projectName": "DAL",
-      "projectPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\C#_dotnet\\Portfolio\\PortfolioBackend\\DAL\\DAL.csproj",
+      "projectPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\DAL\\DAL.csproj",
       "packagesPath": "C:\\Users\\peril\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\C#_dotnet\\Portfolio\\PortfolioBackend\\DAL\\obj\\",
+      "outputPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\DAL\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\peril\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -761,8 +761,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Users\\peril\\Documents\\OsobneRzeczy\\C#_dotnet\\Portfolio\\PortfolioBackend\\Domain\\Domain.csproj": {
-              "projectPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\C#_dotnet\\Portfolio\\PortfolioBackend\\Domain\\Domain.csproj"
+            "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\Domain\\Domain.csproj": {
+              "projectPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\Domain\\Domain.csproj"
             }
           }
         }
