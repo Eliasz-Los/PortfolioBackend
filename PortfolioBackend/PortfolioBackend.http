@@ -3,3 +3,19 @@
 GET {{PortfolioBackend_HostAddress}}/api/Floorplan/floorplans
 Accept: application/json
 
+### Path finder api call, where user will chose his beginning and end point on a specific image
+GET {{PortfolioBackend_HostAddress}}/api/Path/route
+Content-Type: application/json
+
+{
+  "Start": {
+    "XWidth": 807.0, 
+    "YHeight": 1289.0
+  },
+  "End": {
+    "XWidth": 3802.0 ,
+    "YHeight": 354.0
+  },
+  "Name": "game_floor",
+  "FloorNumber": 2
+}

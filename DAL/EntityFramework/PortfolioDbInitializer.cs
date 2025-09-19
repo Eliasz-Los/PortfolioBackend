@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Domain.pathfinder;
 
 namespace DAL.EntityFramework;
 
@@ -14,9 +15,9 @@ public class PortfolioDbInitializer
 
     private static void Seed(PortfolioDbContext context)
     {
-        Floorplan floorplan1 = new Floorplan("Hospital A", 1,"1/200", "hospital_a_floor1.png");
-        
-        context.Floorplans.Add(floorplan1);
+        Floorplan floorplan1 = new Floorplan("teachers_floor", 1,"1/200", "teachers_floor1.png");
+        Floorplan testFloorplan = new Floorplan("game_floor", 2,"1/200", "test_floorplan.png");
+        context.Floorplans.AddRange(floorplan1, testFloorplan);
         
         context.SaveChanges();
         

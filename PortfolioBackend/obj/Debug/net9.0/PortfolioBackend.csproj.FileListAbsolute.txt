@@ -20,10 +20,6 @@ C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\Portf
 C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\PortfolioBackend\bin\Debug\net9.0\Microsoft.Extensions.Logging.Abstractions.dll
 C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\PortfolioBackend\bin\Debug\net9.0\Microsoft.Extensions.Options.dll
 C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\PortfolioBackend\bin\Debug\net9.0\Microsoft.Extensions.Primitives.dll
-C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\PortfolioBackend\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
-C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\PortfolioBackend\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
-C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\PortfolioBackend\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
-C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\PortfolioBackend\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\PortfolioBackend\bin\Debug\net9.0\Microsoft.OpenApi.dll
 C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\PortfolioBackend\bin\Debug\net9.0\Npgsql.dll
 C:\Users\peril\Documents\OsobneRzeczy\C#_dotnet\Portfolio\PortfolioBackend\PortfolioBackend\bin\Debug\net9.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll

@@ -1,5 +1,6 @@
 ﻿using DAL.EntityFramework;
 using Domain;
+using Domain.pathfinder;
 
 namespace DAL.Repository;
 

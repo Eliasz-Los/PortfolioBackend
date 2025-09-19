@@ -1,5 +1,6 @@
 ﻿using DAL.Repository;
 using Domain;
+using Domain.pathfinder;
 using Microsoft.Extensions.Logging;
 
 namespace BL.pathfinder;
