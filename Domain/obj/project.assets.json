@@ -49,11 +49,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\C#_dotnet\\Portfolio\\PortfolioBackend\\Domain\\Domain.csproj",
+      "projectUniqueName": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\Domain\\Domain.csproj",
       "projectName": "Domain",
-      "projectPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\C#_dotnet\\Portfolio\\PortfolioBackend\\Domain\\Domain.csproj",
+      "projectPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\Domain\\Domain.csproj",
       "packagesPath": "C:\\Users\\peril\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\C#_dotnet\\Portfolio\\PortfolioBackend\\Domain\\obj\\",
+      "outputPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\Domain\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\peril\\AppData\\Roaming\\NuGet\\NuGet.Config"
