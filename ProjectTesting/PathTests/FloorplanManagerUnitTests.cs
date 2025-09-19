@@ -46,7 +46,7 @@ public class FloorplanManagerUnitTests
     public void GetFloorplanByNameAndFloor_ValidInput_ShouldReturnFloorplan()
     {
         // Arrange
-        string name = "Hospital A";
+        string name = "teachers_floor";
         int floorNumber = 1;
 
         // Act
