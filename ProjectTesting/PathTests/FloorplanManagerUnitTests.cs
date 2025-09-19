@@ -39,7 +39,7 @@ public class FloorplanManagerUnitTests
 
         // Assert
         Assert.NotNull(floorplans);
-        Assert.Equal(2, floorplans.Count());
+        Assert.Equal(3, floorplans.Count());
     }
 
     [Fact]
