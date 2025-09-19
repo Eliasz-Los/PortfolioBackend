@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Domain.pathfinder;
 using Microsoft.Extensions.Logging;
 
 namespace BL.pathfinder;
@@ -9,13 +10,13 @@ namespace BL.pathfinder;
  */
 public class AStarPathfinding
 {
-    private static readonly ILogger<AStarPathfinding> _logger;
+    // private static readonly ILogger<AStarPathfinding> _logger;
     
  public static List<Point> FindPath( Point start, Point end, HashSet<Point> walkablePoints)
     {
         if (!walkablePoints.Contains(start) || !walkablePoints.Contains(end))
         {
-            _logger.LogError("Start or end point is not walkable.");
+            // _logger.LogError("Start or end point is not walkable.");
             return new List<Point>();
         }
 
@@ -49,15 +50,15 @@ public class AStarPathfinding
         openSetLookup.Add(start); 
         
         int iterationCount = 0;
-        const int maxIterations = 7000000;//1 mil but it can go up to 6,988,086 because those are all walkable points
+        const int maxIterations = 7000000;//1 mil but it can go up to 6,988,086 because those are all walkable points in the test image
 
-        _logger.LogInformation("Start pathfinding...");
+        // _logger.LogInformation("Start pathfinding...");
         while (openSet.Count > 0)
         {
             iterationCount++;
             if (iterationCount > maxIterations)
             {
-                _logger.LogInformation("Exceeded maximum iterations, breaking out of loop. iterationCount: {iterationCount}", iterationCount);
+                // _logger.LogInformation("Exceeded maximum iterations, breaking out of loop. iterationCount: {iterationCount}", iterationCount);
                 break;
             }
 
@@ -66,7 +67,7 @@ public class AStarPathfinding
 
             if (currentNode.Point.Equals(end))
             {
-                _logger.LogInformation("Path found. iterationCount: {iterationCount}", iterationCount);
+                // _logger.LogInformation("Path found. iterationCount: {iterationCount}", iterationCount);
                 return RetracePath(nodeDictionary[start], currentNode);
             }
             
@@ -105,7 +106,7 @@ public class AStarPathfinding
             }
         }
 
-        _logger.LogInformation("No path found. iterationCount: {iterationCount}", iterationCount);
+        // _logger.LogInformation("No path found. iterationCount: {iterationCount}", iterationCount);
         return new List<Point>();
     }
 

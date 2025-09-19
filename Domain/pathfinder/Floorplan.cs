@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-
-namespace Domain;
+﻿namespace Domain.pathfinder;
 
 public class Floorplan
 {

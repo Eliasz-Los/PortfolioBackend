@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Domain;
+using Domain.pathfinder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

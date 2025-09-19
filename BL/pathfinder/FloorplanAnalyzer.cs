@@ -2,14 +2,12 @@
 using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using Point = Domain.Point;
+using Point = Domain.pathfinder.Point;
 
 namespace BL.pathfinder;
 
 public class FloorplanAnalyzer
 {
-    private static readonly ILogger<FloorplanAnalyzer> _logger;
-    
     public static (Point start, Point end, HashSet<Point>) GetWalkablePoints(string imagePath, Point startCoords, Point endCoords)
     {
         // ConcurrentBag is thread-safe
@@ -21,7 +19,8 @@ public class FloorplanAnalyzer
         
         using (Image<Rgba32> image = Image.Load<Rgba32>(imagePath))
         {
-            // Bounded Search Space zodat het nie alle punten/pixels moet overlopen
+            // Bounded Search Space so that it doesn't have to check the whole image
+            //TODO check if margin can't be done dynamically based on distance between start and end, and the width and height of the image
             int minX = (int)Math.Max(0, Math.Min(startCoords.XWidth, endCoords.XWidth) - margin);
             int maxX = (int)Math.Min(image.Width, Math.Max(startCoords.XWidth, endCoords.XWidth) + margin);
             int minY = (int)Math.Max(0, Math.Min(startCoords.YHeight, endCoords.YHeight) - margin);
@@ -52,7 +51,7 @@ public class FloorplanAnalyzer
         {
             throw new Exception("Start or end point is not walkable.");
         }
-        _logger.LogInformation("Total walkable points: {Count}", walkablePoints.Count);
+        // _logger.LogInformation("Total walkable points: {Count}", walkablePoints.Count);
 
         return (startPoint, endPoint, new HashSet<Point>(walkablePoints) ); //walkablePoints.ToHashSet()
     }

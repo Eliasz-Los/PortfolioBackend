@@ -1,4 +1,4 @@
-﻿namespace Domain;
+﻿namespace Domain.pathfinder;
 
 public class Node : IComparable<Node>
 {

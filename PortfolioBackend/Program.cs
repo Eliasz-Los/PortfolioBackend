@@ -1,3 +1,5 @@
+using System.Drawing;
+using BL.mapper;
 using BL.pathfinder;
 using DAL.EntityFramework;
 using DAL.Repository;
@@ -17,6 +19,7 @@ builder.Services.AddScoped<FloorplanManager>();
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 //mappers
+builder.Services.AddAutoMapper(typeof(PointMappingProfile));
 
 var app = builder.Build();
 

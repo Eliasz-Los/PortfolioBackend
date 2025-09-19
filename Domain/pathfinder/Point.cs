@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Domain;
+﻿namespace Domain.pathfinder;
 
 public class Point
 {

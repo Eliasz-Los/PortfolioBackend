@@ -2,6 +2,7 @@
 using DAL.EntityFramework;
 using DAL.Repository;
 using Domain;
+using Domain.pathfinder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;

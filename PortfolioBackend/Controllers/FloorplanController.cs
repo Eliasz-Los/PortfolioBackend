@@ -1,5 +1,6 @@
 ﻿using BL.pathfinder;
 using Domain;
+using Domain.pathfinder;
 using Microsoft.AspNetCore.Mvc;
 
 namespace PortfolioBackend.Controllers;
