@@ -17,7 +17,7 @@ public class PathController : ControllerBase
         _webHostEnvironment = webHostEnvironment;
     }
 
-    [HttpGet("route")]
+    [HttpPost("route")]
     public async Task<IActionResult> FindPath(PathRequestDto pathRequestDto)
     {
         string folderPath = Path.Combine(_webHostEnvironment.ContentRootPath, "floor_images");
