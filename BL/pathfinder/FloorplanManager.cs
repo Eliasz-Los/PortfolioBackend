@@ -26,14 +26,14 @@ public class FloorplanManager
     {
         if (string.IsNullOrEmpty(name) || floorNumber <= 0)
         {
-            _logger.LogWarning("Invalid input: name is null/empty or floorNumber is <= 0. Name: {name} - FloorNumber: {floorNumber}",name, floorNumber);
-            throw new ArgumentException("Name must not be null/empty and floorNumber must be greater than zero.");
+            _logger.LogWarning("Invalid input: name is null/empty or floorNumber is <= 0. FloorplanName: {name} - FloorNumber: {floorNumber}",name, floorNumber);
+            throw new ArgumentException("FloorplanName must not be null/empty and floorNumber must be greater than zero.");
         }
 
         var floorplan = _floorplanRepository.ReadFloorplanByNameAndFloor(name, floorNumber);
         if (floorplan == null)
         {
-            _logger.LogWarning("No floorplan found for name '{Name}' and floor '{FloorNumber}'.", name, floorNumber);
+            _logger.LogWarning("No floorplan found for name '{FloorplanName}' and floor '{FloorNumber}'.", name, floorNumber);
             throw new InvalidOperationException("No floorplan found for name '{name}' and floor '{floorNumber}'.");
         }
 

@@ -27,7 +27,7 @@ public class PathManager
         Point end = _mapper.Map<Point>(pathRequestDto.End);
         
         //Getting the image path
-        var floorplan = _floorplanManager.GetFloorplanByNameAndFloor(pathRequestDto.Name, pathRequestDto.FloorNumber);
+        var floorplan = _floorplanManager.GetFloorplanByNameAndFloor(pathRequestDto.FloorplanName, pathRequestDto.FloorNumber);
         var imagePath = Path.Combine(folderPath, floorplan.Image);
         
         //Analyzing the walkable points
