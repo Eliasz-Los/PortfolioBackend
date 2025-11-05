@@ -22,7 +22,7 @@ public class FloorplanAnalyzer
         var walkablePoints = new ConcurrentBag<Point>();
         Point startPoint = null;
         Point endPoint = null;
-        int margin = 500; //250 was goe maar 500 kon wel getekend worden
+        int margin = 1000; //250 is good for short dist. but 500 help to broaden it, 1000 is good for long distances
         
         using (Image<Rgba32> image = Image.Load<Rgba32>(imagePath))
         {
