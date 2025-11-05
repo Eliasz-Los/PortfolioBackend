@@ -28,7 +28,7 @@ public class AStarPathfinding
 
         
         // Bounded Search Space
-        double margin = 350; 
+        double margin = 1000; 
         double minX = Math.Min(start.XWidth, end.XWidth) - margin;
         double maxX = Math.Max(start.XWidth, end.XWidth) + margin;
         double minY = Math.Min(start.YHeight, end.YHeight) - margin;
@@ -79,7 +79,7 @@ public class AStarPathfinding
             
             closedSet.Add(currentNode.Point);
 
-            //ipv dure functie GetNeighbors te callen, pakken we onmiddelijk de kardinale richtingen in array samen met de breedte en hoogte van de huidige node
+            //instead of calling the expensive GetNeighbors function, we just take the cardinal points 
             foreach (var (dx, dy) in new[] { (-1, 0), (1, 0), (0, -1), (0, 1)  }) //, (-1, -1), (1, -1), (-1, 1), (1, 1)
             {
                 
