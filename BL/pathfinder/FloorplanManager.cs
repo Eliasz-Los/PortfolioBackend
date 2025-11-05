@@ -5,12 +5,12 @@ using Microsoft.Extensions.Logging;
 
 namespace BL.pathfinder;
 
-public class FloorplanManager
+public class FloorplanManager : IFloorplanManager
 {
-    private readonly FloorplanRepository _floorplanRepository;
+    private readonly IFloorplanRepository _floorplanRepository;
     private readonly ILogger<FloorplanManager> _logger;
 
-    public FloorplanManager(FloorplanRepository floorplanRepository, ILogger<FloorplanManager> logger)
+    public FloorplanManager(IFloorplanRepository floorplanRepository, ILogger<FloorplanManager> logger)
     {
         _floorplanRepository = floorplanRepository;
         _logger = logger;

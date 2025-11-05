@@ -9,9 +9,9 @@ namespace PortfolioBackend.Controllers;
 [ApiController]
 public class FloorplanController : ControllerBase
 {
-    private readonly FloorplanManager _floorplanManager;
+    private readonly IFloorplanManager _floorplanManager;
 
-    public FloorplanController(FloorplanManager floorplanManager)
+    public FloorplanController(IFloorplanManager floorplanManager)
     {
         _floorplanManager = floorplanManager;
     }

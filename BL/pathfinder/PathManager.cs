@@ -6,18 +6,22 @@ using Microsoft.Extensions.Logging;
 
 namespace BL.pathfinder;
 
-public class PathManager
+public class PathManager : IPathManager
 {
     private readonly ILogger<PathManager> _logger;
-    private readonly FloorplanManager _floorplanManager;
+    private readonly IFloorplanManager _floorplanManager;
     private readonly IMapper _mapper;
+    private readonly AStarPathfinding _pathfinding;
+    private readonly  FloorplanAnalyzer _floorplanAnalyzer;
     
 
-    public PathManager(ILogger<PathManager> logger, FloorplanManager floorplanManager, IMapper mapper)
+    public PathManager(ILogger<PathManager> logger, IFloorplanManager floorplanManager, IMapper mapper, AStarPathfinding pathfinding, FloorplanAnalyzer floorplanAnalyzer)
     {
         _logger = logger;
         _floorplanManager = floorplanManager;
         _mapper = mapper;
+        _pathfinding = pathfinding;
+        _floorplanAnalyzer = floorplanAnalyzer;
     }
     
     public async Task<List<PathPointDto>> FindPath(PathRequestDto pathRequestDto, string folderPath)
@@ -31,10 +35,10 @@ public class PathManager
         var imagePath = Path.Combine(folderPath, floorplan.Image);
         
         //Analyzing the walkable points
-        var (startP, endP, walkablePoints) = await Task.Run( () => FloorplanAnalyzer.GetWalkablePoints(imagePath, start ,end));
+        var (startP, endP, walkablePoints) = await Task.Run( () => _floorplanAnalyzer.GetWalkablePoints(imagePath, start ,end));
         
         // navigating the path
-        var path = await Task.Run(() => AStarPathfinding.FindPath(startP, endP, walkablePoints));
+        var path = await Task.Run(() => _pathfinding.FindPath(startP, endP, walkablePoints));
         _logger.LogInformation($"Path found: {path} {path.Count}");
         return _mapper.Map<List<PathPointDto>>(path);
     }

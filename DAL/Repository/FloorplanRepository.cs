@@ -4,7 +4,7 @@ using Domain.pathfinder;
 
 namespace DAL.Repository;
 
-public class FloorplanRepository
+public class FloorplanRepository : IFloorplanRepository
 {
     private readonly PortfolioDbContext _context;
 

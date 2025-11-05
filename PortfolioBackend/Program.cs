@@ -12,9 +12,11 @@ builder.Services.AddDbContext<PortfolioDbContext>( options =>
 
 // Add services to the container.
 //services
-builder.Services.AddScoped<PathManager>();
-builder.Services.AddScoped<FloorplanRepository>();
-builder.Services.AddScoped<FloorplanManager>();
+builder.Services.AddScoped <IPathManager, PathManager>();
+builder.Services.AddScoped<AStarPathfinding>();
+builder.Services.AddScoped<FloorplanAnalyzer>();
+builder.Services.AddScoped<IFloorplanRepository,FloorplanRepository>();
+builder.Services.AddScoped<IFloorplanManager,FloorplanManager>();
 
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
