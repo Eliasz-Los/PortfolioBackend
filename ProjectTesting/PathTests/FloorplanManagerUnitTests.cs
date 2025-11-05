@@ -11,28 +11,28 @@ namespace ProjectTesting.PathTests;
 
 public class FloorplanManagerUnitTests
 {
-    private readonly PortfolioDbContext _dbContext;
-    private readonly FloorplanRepository _repo;
+    private readonly Mock<IFloorplanRepository> _repo;
+    private readonly Mock<ILogger<FloorplanManager>> _loggerMock;
     private readonly FloorplanManager _manager;
 
     public FloorplanManagerUnitTests()
     {
-        var options = new DbContextOptionsBuilder<PortfolioDbContext>()
-            .UseInMemoryDatabase(databaseName: "TestDatabase")
-            .Options;
-        
-        _dbContext = new PortfolioDbContext(options);
-        _repo = new FloorplanRepository(_dbContext);
-        _manager = new FloorplanManager(_repo, new Mock<ILogger<FloorplanManager>>().Object);
-        
+        _repo = new Mock<IFloorplanRepository>(); 
+        _loggerMock = new Mock<ILogger<FloorplanManager>>();
+        _manager = new FloorplanManager(_repo.Object, _loggerMock.Object);
     }
     
     [Fact]
     public void GetAllFloorplans_ShouldReturnAllFloorplans()
     {
         // Arrange
-        _dbContext.Floorplans.Add(new Floorplan("Hospital A", 2, "1/200", "hospital_a_floor2.png"));
-        _dbContext.SaveChanges();
+        var list = new List<Floorplan>
+        {
+            new Floorplan("Hospital A", 2, "1/200", "hospital_a_floor2.png"),
+            new Floorplan("teachers_floor", 1, "1/100", "teachers_floor.png"),
+            new Floorplan("office", 1, "1/100", "office1.png")
+        };
+        _repo.Setup(r => r.ReadFloorplans()).Returns(list);
         
         // Act
         var floorplans = _manager.GetAllFloorplans();
@@ -48,6 +48,9 @@ public class FloorplanManagerUnitTests
         // Arrange
         string name = "teachers_floor";
         int floorNumber = 1;
+        var expected = new Floorplan(name, floorNumber, "1/100", "teachers_floor.png");
+        _repo.Setup(r => r.ReadFloorplanByNameAndFloor(name, floorNumber)).Returns(expected);
+
 
         // Act
         var floorplan = _manager.GetFloorplanByNameAndFloor(name, floorNumber);

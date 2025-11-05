@@ -1,5 +1,4 @@
-﻿using Domain;
-using Domain.pathfinder;
+﻿using Domain.pathfinder;
 using Microsoft.Extensions.Logging;
 
 namespace BL.pathfinder;
@@ -8,15 +7,22 @@ namespace BL.pathfinder;
  *  it will not cause bottlenecks.
  *  This keeps the main thread free for other tasks.
  */
+
+//TODO: somehow with the test_floor image I cannot get a path to the top left corner, like to far in big_room1 and it cannot find a way
 public class AStarPathfinding
 {
-    // private static readonly ILogger<AStarPathfinding> _logger;
-    
- public static List<Point> FindPath( Point start, Point end, HashSet<Point> walkablePoints)
+    private readonly ILogger<AStarPathfinding> _logger;
+
+    public AStarPathfinding(ILogger<AStarPathfinding> logger)
+    {
+        _logger = logger;
+    }
+
+    public List<Point> FindPath( Point start, Point end, HashSet<Point> walkablePoints)
     {
         if (!walkablePoints.Contains(start) || !walkablePoints.Contains(end))
         {
-            // _logger.LogError("Start or end point is not walkable.");
+            _logger.LogError("Start or end point is not walkable.");
             return new List<Point>();
         }
 
@@ -52,13 +58,13 @@ public class AStarPathfinding
         int iterationCount = 0;
         const int maxIterations = 7000000;//1 mil but it can go up to 6,988,086 because those are all walkable points in the test image
 
-        // _logger.LogInformation("Start pathfinding...");
+        _logger.LogInformation("Start pathfinding...");
         while (openSet.Count > 0)
         {
             iterationCount++;
             if (iterationCount > maxIterations)
             {
-                // _logger.LogInformation("Exceeded maximum iterations, breaking out of loop. iterationCount: {iterationCount}", iterationCount);
+                _logger.LogInformation("Exceeded maximum iterations, breaking out of loop. iterationCount: {iterationCount}", iterationCount);
                 break;
             }
 
@@ -67,14 +73,14 @@ public class AStarPathfinding
 
             if (currentNode.Point.Equals(end))
             {
-                // _logger.LogInformation("Path found. iterationCount: {iterationCount}", iterationCount);
+                _logger.LogInformation("Path found. iterationCount: {iterationCount}", iterationCount);
                 return RetracePath(nodeDictionary[start], currentNode);
             }
             
             closedSet.Add(currentNode.Point);
 
             //ipv dure functie GetNeighbors te callen, pakken we onmiddelijk de kardinale richtingen in array samen met de breedte en hoogte van de huidige node
-            foreach (var (dx, dy) in new[] { (-1, 0), (1, 0), (0, -1), (0, 1) })
+            foreach (var (dx, dy) in new[] { (-1, 0), (1, 0), (0, -1), (0, 1)  }) //, (-1, -1), (1, -1), (-1, 1), (1, 1)
             {
                 
                 var newWidth = currentNode.Point.XWidth + dx;
@@ -106,7 +112,7 @@ public class AStarPathfinding
             }
         }
 
-        // _logger.LogInformation("No path found. iterationCount: {iterationCount}", iterationCount);
+        _logger.LogInformation("No path found. iterationCount: {iterationCount}", iterationCount);
         return new List<Point>();
     }
 

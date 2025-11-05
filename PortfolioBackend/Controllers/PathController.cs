@@ -8,10 +8,10 @@ namespace PortfolioBackend.Controllers;
 [ApiController]
 public class PathController : ControllerBase
 {
-    private readonly PathManager _pathManager;
+    private readonly IPathManager _pathManager;
     private readonly IWebHostEnvironment _webHostEnvironment;
 
-    public PathController(PathManager pathManager, IWebHostEnvironment webHostEnvironment)
+    public PathController(IPathManager pathManager, IWebHostEnvironment webHostEnvironment)
     {
         _pathManager = pathManager;
         _webHostEnvironment = webHostEnvironment;
