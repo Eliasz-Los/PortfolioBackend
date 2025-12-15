@@ -18,4 +18,6 @@ public class Name
         FirstName = firstName;
         LastName = lastName;
     }
+
+    public Name() { }
 }

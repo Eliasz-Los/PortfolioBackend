@@ -19,3 +19,10 @@ Content-Type: application/json
   "FloorplanName": "game_floor",
   "FloorNumber": 2
 }
+
+
+
+############ Patients, Doctors, Appointments
+
+GET {{PortfolioBackend_HostAddress}}/api/hospital/patients
+Accept: application/json

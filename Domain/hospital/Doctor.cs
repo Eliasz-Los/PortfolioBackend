@@ -17,4 +17,8 @@ public class Doctor : BaseEntity
         WorkAddress = workAddress;
         Id = id;
     }
+
+    public Doctor()
+    {
+    }
 }

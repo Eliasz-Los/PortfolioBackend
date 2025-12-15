@@ -1,8 +1,11 @@
 using System.Drawing;
+using BL.hospital;
 using BL.mapper;
 using BL.pathfinder;
 using DAL.EntityFramework;
 using DAL.Repository;
+using DAL.Repository.hospital;
+using Domain.hospital;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,11 +15,17 @@ builder.Services.AddDbContext<PortfolioDbContext>( options =>
 
 // Add services to the container.
 //services
-builder.Services.AddScoped <IPathManager, PathManager>();
+//pathfinder
+builder.Services.AddScoped<IPathManager, PathManager>();
 builder.Services.AddScoped<AStarPathfinding>();
 builder.Services.AddScoped<FloorplanAnalyzer>();
 builder.Services.AddScoped<IFloorplanRepository,FloorplanRepository>();
 builder.Services.AddScoped<IFloorplanManager,FloorplanManager>();
+//hospital
+builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+builder.Services.AddScoped(typeof(IBaseManager<>), typeof(BaseManager<>));
+builder.Services.AddScoped(typeof(AppointmentManager));
 
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
