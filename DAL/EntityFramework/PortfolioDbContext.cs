@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Domain;
 using Domain.hospital;
+using Domain.hospital.types;
 using Domain.pathfinder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -44,16 +45,22 @@ public class PortfolioDbContext : DbContext
             .HasMany(patient => patient.Appointments)
             .WithOne(appointment => appointment.Patient)
             .HasForeignKey("PatientId");
+        modelBuilder.Entity<Patient>().OwnsOne(p => p.FullName);
+        modelBuilder.Entity<Patient>().OwnsOne(p => p.Location);
+        
         modelBuilder.Entity<Doctor>()
             .HasMany(doctor => doctor.Appointments)
             .WithOne(appointment => appointment.Doctor)
             .HasForeignKey("DoctorId");
-        modelBuilder.Entity<Appointment>()
-            .HasKey(a => a.Id);
+        modelBuilder.Entity<Doctor>().OwnsOne(d => d.FullName);
+        modelBuilder.Entity<Doctor>().OwnsOne(d => d.WorkAddress);
+        
+        modelBuilder.Entity<Appointment>().HasKey(a => a.Id);
         
         modelBuilder.Entity<Invoice>()
             .HasOne(i => i.Patient)
             .WithMany(p => p.Invoices)
             .HasForeignKey("PatientId");
+
     }
 }

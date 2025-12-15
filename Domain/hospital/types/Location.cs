@@ -28,4 +28,6 @@ public class Location
         PostalCode = postalCode;
         Country = country;
     }
+
+    public Location() {}
 }

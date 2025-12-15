@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repository.hospital;
 
-public class AppointmentRepository : BaseRepository<Appointment>
+public class AppointmentRepository : BaseRepository<Appointment>, IAppointmentRepository
 {
     public AppointmentRepository(PortfolioDbContext context) : base(context)
     {
