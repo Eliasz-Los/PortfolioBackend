@@ -2,7 +2,7 @@
 using BL.dto;
 using Domain.pathfinder;
 
-namespace BL.mapper;
+namespace BL.pathfinder.mapper;
 
 public class PointMappingProfile : Profile
 {
