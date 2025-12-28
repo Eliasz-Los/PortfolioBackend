@@ -5,17 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace PortfolioBackend.Controllers.hospital;
 
 [ApiController]
-[Route("api/hospital/")]
+[Route("api/hospital/[controller]")]
 public class AppointmentController : Controller
 {
     private readonly AppointmentManager _appointmentManager;
-
-    private readonly IBaseManager<Appointment> _baseManager;
     
-    public AppointmentController(AppointmentManager appointmentManager, IBaseManager<Appointment> baseManager)
+    public AppointmentController(AppointmentManager appointmentManager)
     {
         _appointmentManager = appointmentManager;
-        _baseManager = baseManager;
     }
 
     [HttpGet("patient/{id}/appointments")]

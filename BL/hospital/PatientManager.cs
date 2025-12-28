@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using BL.generalDto;
 using BL.hospital.dto;
 using BL.hospital.mapper;
 using BL.hospital.validation;
@@ -8,21 +9,22 @@ using Domain.hospital;
 
 namespace BL.hospital;
 
-public class PatientManager : BaseManager<Patient>, IPatientManager
+public class PatientManager : IBaseManager<Patient, PatientDto, AddPatientDto>  
 {
     private readonly IMapper _mapper;
     private readonly IValidation<Patient> _validation;
+    private readonly IBaseRepository<Patient> _repository;
 
     public PatientManager(IBaseRepository<Patient> repository, IMapper mapper, IValidation<Patient> validation)
-        : base(repository)
     {
+        _repository = repository;
         _mapper = mapper;
         _validation = validation;
     }
 
-    public async Task<PatientDto> GetPatientById(Guid patientId)
+    public async Task<PatientDto?> GetById(Guid patientId)
     {
-        var patient = await Repository.ReadById(patientId);
+        var patient = await _repository.ReadById(patientId);
         if (patient == null)
         {
             throw new KeyNotFoundException($"Patient with ID {patientId} not found.");
@@ -30,13 +32,13 @@ public class PatientManager : BaseManager<Patient>, IPatientManager
         return _mapper.Map<PatientDto>(patient);
     }
     
-    public async Task<IEnumerable<PatientDto>> GetAllPatients()
+    public async Task<IEnumerable<PatientDto>> GetAll()
     {
-        var patients = await Repository.ReadAll();
+        var patients = await _repository.ReadAll();
         return _mapper.Map<IEnumerable<PatientDto>>(patients);
     }
     
-    public async Task<Patient> AddPatient(AddPatientDto addPatient)
+    public async Task<Patient> Add(AddPatientDto addPatient)
     {
         Patient patient = _mapper.Map<Patient>(addPatient);
         var validationResults = _validation.Validate(patient).ToList();
@@ -47,12 +49,12 @@ public class PatientManager : BaseManager<Patient>, IPatientManager
             throw new ValidationException(errors);
         }
         
-        return await Repository.Create(patient);
+        return await _repository.Create(patient);
     }
 
-    public void RemovePatient(Guid id)
+    public void Remove(Guid id)
     { 
-        Repository.Delete(id);
+        _repository.Delete(id);
     }
-   
+    
 }

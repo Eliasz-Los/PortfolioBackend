@@ -11,5 +11,12 @@
     &lt;TestId&gt;xUnit::1EB9B43B-6305-419D-921C-C99F663746AC::net9.0::ProjectTesting.HospitalTests.PatientUnitTests.GetAllPatients_ReturnsMappedPatientDtos&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::1EB9B43B-6305-419D-921C-C99F663746AC::net9.0::ProjectTesting.HospitalTests.PatientUnitTests.AddPatient_ValidPatient_AddsAndReturnsPatient&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::1EB9B43B-6305-419D-921C-C99F663746AC::net9.0::ProjectTesting.HospitalTests.PatientUnitTests.DeletePatient_ExistingId_RemovesPatient&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1EB9B43B-6305-419D-921C-C99F663746AC::net9.0::ProjectTesting.HospitalTests.DoctorUnitTests.GetDoctorById_ReturnsDoctor_WhenDoctorExists&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1EB9B43B-6305-419D-921C-C99F663746AC::net9.0::ProjectTesting.HospitalTests.DoctorUnitTests.GetDoctorById_ReturnsDoctorDto_WhenDoctorExists&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1EB9B43B-6305-419D-921C-C99F663746AC::net9.0::ProjectTesting.HospitalTests.DoctorUnitTests.GetAllDoctors_ReturnListOfDoctorDtos&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1EB9B43B-6305-419D-921C-C99F663746AC::net9.0::ProjectTesting.HospitalTests.DoctorUnitTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1EB9B43B-6305-419D-921C-C99F663746AC::net9.0::ProjectTesting.HospitalTests.AppointmentUnitTests.GetAppointmentsOfPatientById_ReturnsAppointments_WhenAppointmentsExist&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1EB9B43B-6305-419D-921C-C99F663746AC::net9.0::ProjectTesting.HospitalTests.PatientUnitTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1EB9B43B-6305-419D-921C-C99F663746AC::net9.0::ProjectTesting.HospitalTests.AppointmentUnitTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

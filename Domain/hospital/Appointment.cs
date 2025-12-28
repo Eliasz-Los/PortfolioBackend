@@ -5,6 +5,7 @@ namespace Domain.hospital;
 
 public class Appointment : BaseEntity, IValidatableObject
 {
+    public Guid Id { get; set; }
     public DateTime AppointmentDate { get; set; }
     public Patient Patient { get; set; }
     public Doctor Doctor { get; set; }
