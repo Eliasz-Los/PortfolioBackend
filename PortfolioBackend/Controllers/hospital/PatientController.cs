@@ -7,20 +7,20 @@ using Microsoft.AspNetCore.Mvc;
 namespace PortfolioBackend.Controllers.hospital;
 
 [ApiController]
-[Route("api/hospital/")]
+[Route("api/hospital/[controller]")]
 public class PatientController : Controller
 {
-    private readonly IBaseManager<Patient> _baseManager;
+    private readonly IPatientManager _patientManager;
 
-    public PatientController(IBaseManager<Patient> baseManager)
+    public PatientController( IPatientManager patientManager)
     {
-        _baseManager = baseManager;
+        _patientManager = patientManager;
     }
 
     [HttpGet("patient/{id}")]
     public async Task<IActionResult> GetPatient(Guid id)
     {
-        var patient = await _baseManager.GetById(id);
+        var patient = await _patientManager.GetPatientById(id);
         if (patient == null)
         {
             return Empty;
@@ -31,7 +31,7 @@ public class PatientController : Controller
     [HttpGet("patients")]
     public async Task<IActionResult> GetPatients()
     {
-        var patients = await  _baseManager.GetAll();
+        var patients = await  _patientManager.GetAllPatients();
 
         if (!patients.Any())
         {
@@ -42,17 +42,17 @@ public class PatientController : Controller
     }
 
     [HttpPost("patient")]
-    public IActionResult AddPatient(Patient patient)
+    public async Task<IActionResult> AddPatient(AddPatientDto patient)
     {
-         _baseManager.Add(patient);
-         return CreatedAtAction(nameof(GetPatient), new { id = patient.Id }, patient);
+         var createdPatient = await _patientManager.AddPatient(patient);
+         return CreatedAtAction(nameof(GetPatient), new { id = createdPatient.Id }, patient);
     }
 
 
     [HttpDelete("patient/{id}")]
     public IActionResult DeletePatient(Guid id)
     {
-        _baseManager.Remove(id);
+        _patientManager.RemovePatient(id);
         return NoContent();
     }
     

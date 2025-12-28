@@ -1,9 +1,12 @@
 ﻿using BL.hospital.dto;
+using Domain.hospital;
 
 namespace BL.hospital;
 
 public interface IPatientManager
 {
-    Task<AddPatientDto>  AddPatient(AddPatientDto patient);
-    Task DeletePatient(Guid patientId);
+    Task<PatientDto> GetPatientById(Guid id);
+    Task<IEnumerable<PatientDto>> GetAllPatients();
+    Task<Patient> AddPatient(AddPatientDto patient);
+    void RemovePatient(Guid id);
 }

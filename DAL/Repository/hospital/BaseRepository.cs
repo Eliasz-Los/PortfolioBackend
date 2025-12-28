@@ -25,9 +25,11 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
         return await _dbSet.ToListAsync();
     }
 
-    public void Create(T entity)
+    public async Task<T> Create(T entity)
     {
-        _dbSet.Add(entity);
+         _dbSet.Add(entity);
+         await _context.SaveChangesAsync();
+         return entity;
     }
 
     public void Delete(Guid id)

@@ -7,5 +7,9 @@
     &lt;TestId&gt;xUnit::1EB9B43B-6305-419D-921C-C99F663746AC::net9.0::ProjectTesting.PathTests.FloorplanManagerUnitTests.GetAllFloorplans_ShouldReturnAllFloorplans&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::1EB9B43B-6305-419D-921C-C99F663746AC::net9.0::ProjectTesting.PathTests.FloorplanManagerUnitTests&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::1EB9B43B-6305-419D-921C-C99F663746AC::net9.0::ProjectTesting.PathTests.PathManagerUnitTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1EB9B43B-6305-419D-921C-C99F663746AC::net9.0::ProjectTesting.HospitalTests.PatientUnitTests.GetPatientById_ReturnsPatientDto_WhenPatientExists&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1EB9B43B-6305-419D-921C-C99F663746AC::net9.0::ProjectTesting.HospitalTests.PatientUnitTests.GetAllPatients_ReturnsMappedPatientDtos&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1EB9B43B-6305-419D-921C-C99F663746AC::net9.0::ProjectTesting.HospitalTests.PatientUnitTests.AddPatient_ValidPatient_AddsAndReturnsPatient&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1EB9B43B-6305-419D-921C-C99F663746AC::net9.0::ProjectTesting.HospitalTests.PatientUnitTests.DeletePatient_ExistingId_RemovesPatient&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

@@ -1,7 +1,9 @@
 using System.Drawing;
 using BL.hospital;
-using BL.mapper;
+using BL.hospital.mapper;
+using BL.hospital.validation;
 using BL.pathfinder;
+using BL.pathfinder.mapper;
 using DAL.EntityFramework;
 using DAL.Repository;
 using DAL.Repository.hospital;
@@ -26,11 +28,14 @@ builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped(typeof(IBaseManager<>), typeof(BaseManager<>));
 builder.Services.AddScoped(typeof(AppointmentManager));
+builder.Services.AddScoped<IPatientManager, PatientManager>();
+builder.Services.AddScoped<IValidation<Patient>, Validation<Patient>>();
 
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 //mappers
 builder.Services.AddAutoMapper(typeof(PointMappingProfile));
+builder.Services.AddAutoMapper(typeof(PatientMappingProfile));
 
 var app = builder.Build();
 
