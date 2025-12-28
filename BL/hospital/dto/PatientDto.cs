@@ -3,8 +3,9 @@ using Domain.hospital.types;
 
 namespace BL.hospital.dto;
 
-public class AddPatientDto
+public class PatientDto
 {
+    public Guid Id { get; set; }
     public Name FullName { get; set; }
     public DateOnly DateOfBirth { get; set; }
     [Required]
