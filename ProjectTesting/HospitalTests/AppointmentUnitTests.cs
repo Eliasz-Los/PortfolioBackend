@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BL.hospital;
+using BL.hospital.dto;
 using BL.hospital.validation;
 using DAL.Repository.hospital;
 using Domain.hospital;
@@ -14,16 +15,32 @@ public class AppointmentUnitTests
     private readonly Mock<IMapper> _mapperMock;
     private readonly Mock<IValidation<Appointment>> _validationMock;
     private readonly AppointmentManager _appointmentManager;
-    
+    private readonly Mock<IBaseManager<
+        Patient, PatientDto, AddPatientDto>> _patientManager;
+
+    private readonly Mock<IBaseManager<
+        Doctor, DoctorDto, AddDoctorDto>> _doctorManager;
+
     
     public AppointmentUnitTests()
     {
+        _patientManager = new Mock<IBaseManager<
+            Patient, PatientDto, AddPatientDto>>();
+
+        _doctorManager = new Mock<IBaseManager<
+            Doctor, DoctorDto, AddDoctorDto>>();
+
+
         _appointmentRepository = new Mock<IAppointmentRepository>();
         _mapperMock = new Mock<IMapper>();
         _validationMock = new Mock<IValidation<Appointment>>();
         
         _appointmentManager = new AppointmentManager(
-            _appointmentRepository.Object
+            _appointmentRepository.Object,
+            _validationMock.Object,
+            _mapperMock.Object,
+            _patientManager.Object,
+            _doctorManager.Object
         );
     }
     
