@@ -65,7 +65,7 @@ public class PatientUnitTests
             .Returns(patientDto);
 
         // Act
-        var result = await _patientManager.GetPatientById(patientId);
+        var result = await _patientManager.GetById(patientId);
 
         // Assert
         Assert.NotNull(result);
@@ -128,7 +128,7 @@ public class PatientUnitTests
             .Returns(dtos);
 
         // Act
-        var result = await _patientManager.GetAllPatients();
+        var result = await _patientManager.GetAll();
 
         // Assert
         Assert.NotNull(result);
@@ -171,7 +171,7 @@ public class PatientUnitTests
             .ReturnsAsync(patient);
 
         // Act
-        var result = await _patientManager.AddPatient(addDto);
+        var result = await _patientManager.Add(addDto);
 
         // Assert
         Assert.NotNull(result);
@@ -193,7 +193,7 @@ public class PatientUnitTests
             .Setup(r => r.Delete(patientId));
 
         // Act
-         _patientManager.RemovePatient(patientId);
+         _patientManager.Remove(patientId);
 
         // Assert
         _patientRepositoryMock.Verify(r => r.Delete(patientId), Times.Once);

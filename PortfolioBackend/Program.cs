@@ -1,5 +1,6 @@
 using System.Drawing;
 using BL.hospital;
+using BL.hospital.dto;
 using BL.hospital.mapper;
 using BL.hospital.validation;
 using BL.pathfinder;
@@ -26,10 +27,11 @@ builder.Services.AddScoped<IFloorplanManager,FloorplanManager>();
 //hospital
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-builder.Services.AddScoped(typeof(IBaseManager<>), typeof(BaseManager<>));
+builder.Services.AddScoped<IBaseManager<Patient, PatientDto, AddPatientDto>, PatientManager> ();
+builder.Services.AddScoped<IBaseManager<Doctor, DoctorDto, AddDoctorDto>, DoctorManager> ();
 builder.Services.AddScoped(typeof(AppointmentManager));
-builder.Services.AddScoped<IPatientManager, PatientManager>();
 builder.Services.AddScoped<IValidation<Patient>, Validation<Patient>>();
+builder.Services.AddScoped<IValidation<Doctor>, Validation<Doctor>>();
 
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();

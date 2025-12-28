@@ -5,6 +5,7 @@ namespace Domain.hospital;
 
 public class Patient : BaseEntity, IValidatableObject
 {
+    public Guid Id { get; set; }
     public Name FullName { get; set; }
     public DateOnly DateOfBirth { get; set; }
     [Required]

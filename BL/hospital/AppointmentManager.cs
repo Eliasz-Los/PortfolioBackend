@@ -4,11 +4,11 @@ using Domain.hospital;
 
 namespace BL.hospital;
 
-public class AppointmentManager : BaseManager<Appointment>
+public class AppointmentManager
 {
     private readonly IAppointmentRepository _appointmentRepository;
     
-    public AppointmentManager(IAppointmentRepository appointmentRepository) : base(appointmentRepository)
+    public AppointmentManager(IAppointmentRepository appointmentRepository) 
     {
         _appointmentRepository = appointmentRepository;
     }

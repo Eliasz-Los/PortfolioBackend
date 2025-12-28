@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PortfolioBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+15ab4e552ed69e52e08c4bd28a8b6af7f3653dd6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+81086c5819609a0c390d6da39b5563b255ac79ad")]
 [assembly: System.Reflection.AssemblyProductAttribute("PortfolioBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PortfolioBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

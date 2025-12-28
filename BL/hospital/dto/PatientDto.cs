@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using BL.generalDto;
+using Domain.hospital;
 using Domain.hospital.types;
 
 namespace BL.hospital.dto;
 
-public class PatientDto
+public class PatientDto : GetDto
 {
     public Guid Id { get; set; }
     public Name FullName { get; set; }
