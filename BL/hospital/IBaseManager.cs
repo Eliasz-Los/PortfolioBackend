@@ -2,11 +2,11 @@
 
 namespace BL.hospital;
 
-public interface IBaseManager<T> where T : BaseEntity
+public interface IBaseManager<T, ReadDto, CreateDto> where T : BaseEntity
 {
-    Task<T?> GetById(Guid id);
-    Task<IEnumerable<T>> GetAll();
-    void Add(T entity);
+    Task<ReadDto?> GetById(Guid id);
+    Task<IEnumerable<ReadDto>> GetAll();
+    Task<T> Add(CreateDto entity);
     void Remove(Guid id);
     
 }
