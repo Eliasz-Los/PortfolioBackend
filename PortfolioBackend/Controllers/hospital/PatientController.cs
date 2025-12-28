@@ -10,9 +10,9 @@ namespace PortfolioBackend.Controllers.hospital;
 [Route("api/hospital/[controller]")]
 public class PatientController : Controller
 {
-    private readonly IPatientManager _patientManager;
+    private readonly IBaseManager<Patient, PatientDto, AddPatientDto> _patientManager;
 
-    public PatientController( IPatientManager patientManager)
+    public PatientController(IBaseManager<Patient, PatientDto, AddPatientDto> patientManager)
     {
         _patientManager = patientManager;
     }
@@ -20,7 +20,7 @@ public class PatientController : Controller
     [HttpGet("patient/{id}")]
     public async Task<IActionResult> GetPatient(Guid id)
     {
-        var patient = await _patientManager.GetPatientById(id);
+        var patient = await _patientManager.GetById(id);
         if (patient == null)
         {
             return Empty;
@@ -31,7 +31,7 @@ public class PatientController : Controller
     [HttpGet("patients")]
     public async Task<IActionResult> GetPatients()
     {
-        var patients = await  _patientManager.GetAllPatients();
+        var patients = await  _patientManager.GetAll();
 
         if (!patients.Any())
         {
@@ -44,7 +44,7 @@ public class PatientController : Controller
     [HttpPost("patient")]
     public async Task<IActionResult> AddPatient(AddPatientDto patient)
     {
-         var createdPatient = await _patientManager.AddPatient(patient);
+         var createdPatient = await _patientManager.Add(patient);
          return CreatedAtAction(nameof(GetPatient), new { id = createdPatient.Id }, patient);
     }
 
@@ -52,7 +52,7 @@ public class PatientController : Controller
     [HttpDelete("patient/{id}")]
     public IActionResult DeletePatient(Guid id)
     {
-        _patientManager.RemovePatient(id);
+        _patientManager.Remove(id);
         return NoContent();
     }
     
