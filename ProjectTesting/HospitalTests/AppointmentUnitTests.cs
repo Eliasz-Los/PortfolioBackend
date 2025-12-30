@@ -94,5 +94,64 @@ public class AppointmentUnitTests
         Assert.Equal(patientId, result.First().Patient.Id);
         
     }
-    
+
+    [Fact]
+    public async Task AddAppointment_ReturnsAddedAppointment_WhenValidAppointmentProvided()
+    {
+        // Arrange
+        var patientId = Guid.NewGuid();
+        var patient1 = new Patient(
+            new Name("PatientFirst", "PatientLast"),
+            new DateOnly(2000, 1, 1),
+            "patient@mail.com",
+            "555-000-1234",
+            new Location("Mortselhaar", 154, "Antwerp", "2640", "Belgium"),
+            patientId
+        );
+
+        _patientManager.Setup( pm => pm.GetById(patientId))
+            .ReturnsAsync(new PatientDto
+            {
+                Id = patient1.Id,
+                FullName = patient1.FullName,
+                DateOfBirth = patient1.DateOfBirth,
+                Email = patient1.Email,
+                PhoneNumber = patient1.PhoneNumber,
+                Location = patient1.Location
+            });
+        
+        var doctorId = Guid.NewGuid();
+        var doctor1 = new Doctor(new Name("Dr.w John", "Doe"),
+            Specialisation.Cardiology,
+            new Location("Mortselhaar", 154, "Antwerp", "2640", "Belgium"),
+            doctorId);
+        
+        _doctorManager.Setup( dm => dm.GetById(doctorId))
+            .ReturnsAsync(new DoctorDto
+            {
+                Id = doctor1.Id,
+                FullName = doctor1.FullName,
+                Specialisation = doctor1.Specialisation,
+                WorkAddress = doctor1.WorkAddress
+            });
+        
+        var appointmentDto = new AddAppointmentDto
+        {
+            AppointmentDate = DateTime.Now,
+            PatientId = patientId,
+            DoctorId = doctorId
+        };
+
+        // Act
+        _appointmentRepository
+            .Setup(ar => ar.Create(It.IsAny<Appointment>()))
+            .ReturnsAsync((Appointment a) => a);
+        
+        var createdAppointment = await _appointmentManager.Add(appointmentDto);
+        
+        // Assert
+        Assert.NotNull(createdAppointment);
+        Assert.Equal(appointmentDto.AppointmentDate, createdAppointment.AppointmentDate);
+
+    }
 }

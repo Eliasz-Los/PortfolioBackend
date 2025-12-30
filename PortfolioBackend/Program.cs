@@ -29,15 +29,17 @@ builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<IBaseManager<Patient, PatientDto, AddPatientDto>, PatientManager> ();
 builder.Services.AddScoped<IBaseManager<Doctor, DoctorDto, AddDoctorDto>, DoctorManager> ();
-builder.Services.AddScoped(typeof(AppointmentManager));
+builder.Services.AddScoped<IBaseManager<Appointment, Appointment, AddAppointmentDto>, AppointmentManager>();
 builder.Services.AddScoped<IValidation<Patient>, Validation<Patient>>();
 builder.Services.AddScoped<IValidation<Doctor>, Validation<Doctor>>();
+builder.Services.AddScoped<IValidation<Appointment>, Validation<Appointment>>();
 
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 //mappers
 builder.Services.AddAutoMapper(typeof(PointMappingProfile));
 builder.Services.AddAutoMapper(typeof(PatientMappingProfile));
+builder.Services.AddAutoMapper(typeof(AppointmentMappingProfile));
 
 var app = builder.Build();
 

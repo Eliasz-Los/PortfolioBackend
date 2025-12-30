@@ -38,6 +38,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
         if (entity != null)
         {
             _dbSet.Remove(entity);
+            _context.SaveChanges();
         }
     }
 }
