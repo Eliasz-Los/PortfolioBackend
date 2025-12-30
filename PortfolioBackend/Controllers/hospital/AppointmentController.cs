@@ -1,4 +1,5 @@
 ﻿using BL.hospital;
+using BL.hospital.dto;
 using Domain.hospital;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,6 +40,14 @@ public class AppointmentController : Controller
         }
         
         return Ok(appointments);
+    }
+    
+    
+    [HttpPost("appointment")]
+    public async  Task<IActionResult> CreateAppointment([FromBody] AddAppointmentDto appointmentDto)
+    {
+        var appointment = await _appointmentManager.Add(appointmentDto);
+        return CreatedAtAction(nameof(CreateAppointment), new { id = appointment.Id }, appointment);
     }
     
     
