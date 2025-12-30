@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace PortfolioBackend.Controllers.hospital;
 
 [ApiController]
-[Route("api/hospital/[controller]")]
-public class PatientController : Controller
+[Route("api/hospital/patients")]
+public class PatientController : ControllerBase
 {
     private readonly IBaseManager<Patient, PatientDto, AddPatientDto> _patientManager;
 
@@ -17,18 +17,21 @@ public class PatientController : Controller
         _patientManager = patientManager;
     }
 
-    [HttpGet("patient/{id}")]
+    [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetPatient(Guid id)
     {
+        
         var patient = await _patientManager.GetById(id);
+        
         if (patient == null)
         {
-            return Empty;
+            return NotFound();
         }
+        
         return Ok(patient);
     }
     
-    [HttpGet("patients")]
+    [HttpGet]
     public async Task<IActionResult> GetPatients()
     {
         var patients = await  _patientManager.GetAll();
@@ -41,15 +44,15 @@ public class PatientController : Controller
         return Ok(patients);
     }
 
-    [HttpPost("patient")]
+    [HttpPost]
     public async Task<IActionResult> AddPatient(AddPatientDto patient)
     {
          var createdPatient = await _patientManager.Add(patient);
-         return CreatedAtAction(nameof(GetPatient), new { id = createdPatient.Id }, patient);
+         return CreatedAtAction(nameof(GetPatient), new { id = createdPatient.Id }, createdPatient);
     }
 
 
-    [HttpDelete("patient/{id}")]
+    [HttpDelete("{id:guid}")]
     public IActionResult DeletePatient(Guid id)
     {
         _patientManager.Remove(id);
