@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace PortfolioBackend.Controllers.hospital;
 
 [ApiController]
-[Route("api/hospital/[controller]")]
-public class AppointmentController : Controller
+[Route("api/hospital/appointments")]
+public class AppointmentController : ControllerBase
 {
     private readonly AppointmentManager _appointmentManager;
     
@@ -16,7 +16,7 @@ public class AppointmentController : Controller
         _appointmentManager = appointmentManager;
     }
 
-    [HttpGet("patient/{id}/appointments")]
+    [HttpGet("patients/{patientId:guid}")]
     public async Task<IActionResult> GetPatientAppointments(Guid patientId)
     {
         var appointments =  await _appointmentManager.GetAllAppointmentsFromPatientById(patientId);
@@ -29,8 +29,8 @@ public class AppointmentController : Controller
         return Ok(appointments);
     }
 
-    [HttpGet("doctor/{id}/appointments")]
-    public async Task<IActionResult> GetDoctorAppointments(Guid doctorId)
+    [HttpGet("doctors/{doctorId:guid}")]
+    public async Task<IActionResult> GetDoctorAppointments( Guid doctorId)
     {
         var appointments = await _appointmentManager.GetAllAppointmentsFromDoctorById(doctorId);
 
@@ -42,12 +42,18 @@ public class AppointmentController : Controller
         return Ok(appointments);
     }
     
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        var appointment = await _appointmentManager.GetById(id);
+        return appointment is null ? NotFound() : Ok(appointment);
+    }
     
-    [HttpPost("appointment")]
-    public async  Task<IActionResult> CreateAppointment([FromBody] AddAppointmentDto appointmentDto)
+    [HttpPost]
+    public async Task<IActionResult> CreateAppointment(AddAppointmentDto appointmentDto)
     {
         var appointment = await _appointmentManager.Add(appointmentDto);
-        return CreatedAtAction(nameof(CreateAppointment), new { id = appointment.Id }, appointment);
+        return CreatedAtAction(nameof(GetById), new { id = appointment.Id }, appointment);
     }
     
     
