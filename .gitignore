@@ -48,4 +48,4 @@ nunit-*.xml
 /DAL/Docker/portfolio_db/
 
 # Rider
-.idea
+.idea/
