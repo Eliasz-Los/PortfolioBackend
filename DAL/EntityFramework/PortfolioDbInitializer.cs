@@ -23,13 +23,13 @@ public class PortfolioDbInitializer
         context.Floorplans.AddRange(floorplan1, testFloorplan, maze);
         
         //Hospital seed data
-        var patients = GeneratePatients(10);
+        var patients = GeneratePatients(100);
         context.Patients.AddRange(patients);
 
         var doctors = GenerateDoctors(10);
         context.Doctors.AddRange(doctors);
 
-        var appointments = GenerateAppointments(5, patients, doctors);
+        var appointments = GenerateAppointments(50, patients, doctors);
         context.Appointments.AddRange(appointments);
         
         
@@ -40,11 +40,13 @@ public class PortfolioDbInitializer
     private static List<Patient> GeneratePatients(int count)
     {
         var patients = new List<Patient>();
+        
         for (int i = 1; i <= count; i++)
         {
+            var randomAge = new Random().Next(0, 60);
             patients.Add(new Patient(
                 new Name($"PatientFirst{i}", $"PatientLast{i}"),
-                DateOnly.FromDateTime(DateTime.Now.AddYears(-20 - i)),
+                DateOnly.FromDateTime(DateTime.Now.AddYears(-20 - randomAge)),
                 $"patient{i}@mail.com",
                 $"555-000{i:D3}",
                 new Location($"Mortsel{i}", i, "Antwerp", "2640", "Belgium"),
