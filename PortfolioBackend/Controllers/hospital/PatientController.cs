@@ -11,10 +11,12 @@ namespace PortfolioBackend.Controllers.hospital;
 public class PatientController : ControllerBase
 {
     private readonly IBaseManager<Patient, PatientDto, AddPatientDto> _patientManager;
+    private readonly IInvoiceManager _invoiceManager;
 
-    public PatientController(IBaseManager<Patient, PatientDto, AddPatientDto> patientManager)
+    public PatientController(IBaseManager<Patient, PatientDto, AddPatientDto> patientManager, IInvoiceManager invoiceManager)
     {
         _patientManager = patientManager;
+        _invoiceManager = invoiceManager;
     }
 
     [HttpGet("{id:guid}")]
@@ -57,6 +59,19 @@ public class PatientController : ControllerBase
     {
         _patientManager.Remove(id);
         return NoContent();
+    }
+
+    [HttpGet("{id:guid}/invoices")]
+    public async Task<IActionResult> GetPatientInvoices(Guid id)
+    {
+        var invoices = await _invoiceManager.GetAllByPatientId(id);
+        
+        if (!invoices.Any())
+        {
+            return NotFound();
+        }
+        
+        return Ok(invoices);
     }
     
 }
