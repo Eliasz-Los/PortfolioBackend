@@ -92,9 +92,9 @@ public class PortfolioDbInitializer
         return appointments;
     }
     
-    private static List<Invoice> GenerateInvoicesForPatients(List<Patient> patients)
+    private static List<Invoice?> GenerateInvoicesForPatients(List<Patient> patients)
     {
-        var invoices = new List<Invoice>();
+        var invoices = new List<Invoice?>();
         var rand = new Random();
 
         foreach (var patient in patients)
@@ -104,9 +104,9 @@ public class PortfolioDbInitializer
 
             for (int i = 1; i <= invoiceCount; i++)
             {
-                var amount = rand.Next(50, 1000); // Random amount between 50 and 1000
+                var amount = rand.Next(50, 1000); 
                 var invoiceDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-rand.Next(30)));
-                var dueDate = invoiceDate.AddDays(30); // 30 days after invoice date
+                var dueDate = invoiceDate.AddDays(30); 
                 var invoiceNumber = $"INV-{patient.Id.ToString().Substring(0, 8).ToUpper()}-{i}";
 
                 invoices.Add(new Invoice(
@@ -114,10 +114,10 @@ public class PortfolioDbInitializer
                     invoiceDate,
                     amount,
                     "Hospital Invoice",
-                    "Services rendered",
+                    "Services rendered by the hospital.",
                     dueDate,
                     Guid.NewGuid(),
-                    isPaid: rand.NextDouble() > 0.5 // Randomly mark as paid
+                    isPaid: rand.NextDouble() > 0.5
                 )
                 {
                     Patient = patient,

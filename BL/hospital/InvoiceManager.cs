@@ -2,7 +2,9 @@
 using BL.hospital.dto;
 using DAL.Repository.hospital;
 using Domain.hospital;
+using QuestPDF.Companion;
 using QuestPDF.Fluent;
+using QuestPDF.Previewer;
 
 namespace BL.hospital;
 
@@ -23,9 +25,9 @@ public class InvoiceManager : IInvoiceManager
         return document.GeneratePdf();
     }
 
-    public async Task<Invoice> GetById(Guid invoiceId)
+    public async Task<Invoice?> GetInvoiceWithPatientByInvoiceId(Guid invoiceId)
     {
-        return await _invoiceRepository.ReadById(invoiceId);
+        return await _invoiceRepository.ReadInvoiceWithPatientByInvoiceId(invoiceId);
     }
     
     public async Task<IEnumerable<InvoiceDto>> GetAllByPatientId(Guid patientId)
@@ -34,7 +36,7 @@ public class InvoiceManager : IInvoiceManager
         return _mapper.Map<IEnumerable<InvoiceDto>>(invoices);
     }
     
-    public async Task<Invoice> Add(Invoice invoice)
+    public async Task<Invoice?> Add(Invoice? invoice)
     {
         return await _invoiceRepository.Create(invoice);
     }
