@@ -18,7 +18,7 @@ namespace PortfolioBackend.Controllers.hospital
         [HttpGet("{id:guid}/pdf")]
         public async Task<ActionResult> GetInvoicePdf(Guid id)
         {
-            var invoice = await _invoiceManager.GetById(id);
+            var invoice = await _invoiceManager.GetInvoiceWithPatientByInvoiceId(id);
             
             if (invoice == null)
             {
@@ -28,5 +28,8 @@ namespace PortfolioBackend.Controllers.hospital
             var pdfBytes = _invoiceManager.GenerateInvoicePdf(invoice);
             return File(pdfBytes, "application/pdf", $"Invoice_{invoice.InvoiceNumber}.pdf");
         }
+        
+        
+        //TODO create invoices based on patients treatments/visits, after every visit automatically create invoice
     }
 }

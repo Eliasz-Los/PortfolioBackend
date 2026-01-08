@@ -7,7 +7,7 @@ public interface IInvoiceManager
 {
     byte[] GenerateInvoicePdf(Invoice invoice);
 
-    Task<Invoice> GetById(Guid invoiceId);
+    Task<Invoice?> GetInvoiceWithPatientByInvoiceId(Guid invoiceId);
     Task<IEnumerable<InvoiceDto>> GetAllByPatientId(Guid patientId);
-    Task<Invoice> Add(Invoice invoice);
+    Task<Invoice?> Add(Invoice? invoice);
 }
