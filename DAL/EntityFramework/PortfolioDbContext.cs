@@ -61,6 +61,11 @@ public class PortfolioDbContext : DbContext
             .HasOne(i => i.Patient)
             .WithMany(p => p.Invoices)
             .HasForeignKey("PatientId");
+        //
+        // modelBuilder.Entity<Invoice>()
+        //     .HasOne(i => i.Appointment)
+        //     .WithOne(a => a.Invoice)
+        //     .HasForeignKey<Invoice>("AppointmentId");
 
     }
 }

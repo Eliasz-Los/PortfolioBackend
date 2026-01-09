@@ -92,14 +92,13 @@ public class PortfolioDbInitializer
         return appointments;
     }
     
-    private static List<Invoice?> GenerateInvoicesForPatients(List<Patient> patients)
+    private static List<Invoice> GenerateInvoicesForPatients(List<Patient> patients)
     {
-        var invoices = new List<Invoice?>();
+        var invoices = new List<Invoice>();
         var rand = new Random();
 
         foreach (var patient in patients)
         {
-            // Give 1 or 2 invoices per patient
             int invoiceCount = rand.Next(1, 3);
 
             for (int i = 1; i <= invoiceCount; i++)
@@ -108,7 +107,8 @@ public class PortfolioDbInitializer
                 var invoiceDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-rand.Next(30)));
                 var dueDate = invoiceDate.AddDays(30); 
                 var invoiceNumber = $"INV-{patient.Id.ToString().Substring(0, 8).ToUpper()}-{i}";
-
+                
+                
                 invoices.Add(new Invoice(
                     invoiceNumber,
                     invoiceDate,
@@ -121,6 +121,7 @@ public class PortfolioDbInitializer
                 )
                 {
                     Patient = patient,
+                 
                 });
             }
         }

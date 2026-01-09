@@ -56,6 +56,11 @@ public class AppointmentController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = appointment.Id }, appointment);
     }
     
-    
+    [HttpPost("{id:guid}/complete")]
+    public async Task<IActionResult> CompleteAppointment(Guid id)
+    {
+       await _appointmentManager.CompleteAppointment(id);
+       return NoContent();
+    }
     
 }

@@ -23,12 +23,12 @@ public class InvoiceRepository : IInvoiceRepository
             .FirstOrDefaultAsync(i => i.Id == invoiceId);
     }
 
-    public async Task<IEnumerable<Invoice?>> ReadAllByPatientId(Guid patientId)
+    public async Task<IEnumerable<Invoice>> ReadAllByPatientId(Guid patientId)
     {
         return await _dbContext.Invoices.Where(invoice => invoice.Patient.Id == patientId).ToListAsync();
     }
 
-    public async Task<Invoice?> Create(Invoice? invoice)
+    public async Task<Invoice> Create(Invoice invoice)
     {
        
         _dbContext.Invoices.Add(invoice);
