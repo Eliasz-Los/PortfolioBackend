@@ -20,6 +20,7 @@ public class AppointmentUnitTests
 
     private readonly Mock<IBaseManager<
         Doctor, DoctorDto, AddDoctorDto>> _doctorManager;
+    private readonly Mock<IInvoiceManager> _invoiceManagerMock;
 
     
     public AppointmentUnitTests()
@@ -34,13 +35,15 @@ public class AppointmentUnitTests
         _appointmentRepository = new Mock<IAppointmentRepository>();
         _mapperMock = new Mock<IMapper>();
         _validationMock = new Mock<IValidation<Appointment>>();
+        _invoiceManagerMock = new Mock<IInvoiceManager>();
         
         _appointmentManager = new AppointmentManager(
             _appointmentRepository.Object,
             _validationMock.Object,
             _mapperMock.Object,
             _patientManager.Object,
-            _doctorManager.Object
+            _doctorManager.Object,
+            _invoiceManagerMock.Object
         );
     }
     
