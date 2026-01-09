@@ -29,7 +29,5 @@ namespace PortfolioBackend.Controllers.hospital
             return File(pdfBytes, "application/pdf", $"Invoice_{invoice.InvoiceNumber}.pdf");
         }
         
-        
-        //TODO create invoices based on patients treatments/visits, after every visit automatically create invoice
     }
 }

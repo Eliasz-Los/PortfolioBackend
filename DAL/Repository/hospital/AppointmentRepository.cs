@@ -10,9 +10,18 @@ public class AppointmentRepository : BaseRepository<Appointment>, IAppointmentRe
     {
     }
     
+    public async Task<Appointment?> ReadAppointmentWithRelationsById(Guid appointmentId)
+    {
+        return await _dbSet
+            .Include(a => a.Patient)
+            .Include(a => a.Doctor)
+            .FirstOrDefaultAsync(a => a.Id == appointmentId);
+    }
+    
     public async Task<IEnumerable<Appointment>> ReadAppointmentsByPatientId(Guid patientId)
     {
         return await _dbSet
+            .Include(a => a.Doctor)
             .Where(appointment => appointment.Patient.Id == patientId)
             .ToListAsync();
     }
@@ -20,6 +29,7 @@ public class AppointmentRepository : BaseRepository<Appointment>, IAppointmentRe
     public async Task<IEnumerable<Appointment>> ReadAppointmentsByDoctorId(Guid doctorId)
     {
         return await _dbSet
+            .Include(a => a.Patient)
             .Where(appointment => appointment.Doctor.Id == doctorId)
             .ToListAsync();
     }
