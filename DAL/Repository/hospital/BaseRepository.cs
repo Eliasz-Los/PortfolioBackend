@@ -32,6 +32,13 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
          return entity;
     }
 
+    public async Task<T> Update(T entity)
+    {
+        _dbSet.Update(entity);
+        await _context.SaveChangesAsync();
+        return entity;
+    }
+
     public void Delete(Guid id)
     {
         var entity = _dbSet.Find(id);

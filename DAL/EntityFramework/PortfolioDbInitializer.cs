@@ -32,6 +32,8 @@ public class PortfolioDbInitializer
         var appointments = GenerateAppointments(50, patients, doctors);
         context.Appointments.AddRange(appointments);
         
+        var invoices = GenerateInvoicesForPatients(patients);
+        context.Invoices.AddRange(invoices);
         
         context.SaveChanges();
         
@@ -89,6 +91,44 @@ public class PortfolioDbInitializer
         }
         return appointments;
     }
+    
+    private static List<Invoice> GenerateInvoicesForPatients(List<Patient> patients)
+    {
+        var invoices = new List<Invoice>();
+        var rand = new Random();
+
+        foreach (var patient in patients)
+        {
+            int invoiceCount = rand.Next(1, 3);
+
+            for (int i = 1; i <= invoiceCount; i++)
+            {
+                var amount = rand.Next(50, 1000); 
+                var invoiceDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-rand.Next(30)));
+                var dueDate = invoiceDate.AddDays(30); 
+                var invoiceNumber = $"INV-{patient.Id.ToString().Substring(0, 8).ToUpper()}-{i}";
+                
+                
+                invoices.Add(new Invoice(
+                    invoiceNumber,
+                    invoiceDate,
+                    amount,
+                    "Hospital Invoice",
+                    "Services rendered by the hospital.",
+                    dueDate,
+                    Guid.NewGuid(),
+                    isPaid: rand.NextDouble() > 0.5
+                )
+                {
+                    Patient = patient,
+                 
+                });
+            }
+        }
+
+        return invoices;
+    }
+
     
     
 }

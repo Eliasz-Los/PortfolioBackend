@@ -1,10 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "Fo+vqiF9P/M=",
+  "dgSpecHash": "JoUlHnt0rXY=",
   "success": true,
   "projectFilePath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\BL\\BL.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\peril\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
+    "C:\\Users\\peril\\.nuget\\packages\\dotnettools\\0.0.2\\dotnettools.0.0.2.nupkg.sha512",
+    "C:\\Users\\peril\\.nuget\\packages\\excelabstraction\\0.0.1\\excelabstraction.0.0.1.nupkg.sha512",
+    "C:\\Users\\peril\\.nuget\\packages\\excelabstraction.npoi\\0.0.1\\excelabstraction.npoi.0.0.1.nupkg.sha512",
     "C:\\Users\\peril\\.nuget\\packages\\microsoft.entityframeworkcore\\9.0.9\\microsoft.entityframeworkcore.9.0.9.nupkg.sha512",
     "C:\\Users\\peril\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\9.0.9\\microsoft.entityframeworkcore.abstractions.9.0.9.nupkg.sha512",
     "C:\\Users\\peril\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\9.0.9\\microsoft.entityframeworkcore.analyzers.9.0.9.nupkg.sha512",
@@ -20,7 +23,95 @@
     "C:\\Users\\peril\\.nuget\\packages\\microsoft.extensions.primitives\\9.0.9\\microsoft.extensions.primitives.9.0.9.nupkg.sha512",
     "C:\\Users\\peril\\.nuget\\packages\\npgsql\\9.0.3\\npgsql.9.0.3.nupkg.sha512",
     "C:\\Users\\peril\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\9.0.4\\npgsql.entityframeworkcore.postgresql.9.0.4.nupkg.sha512",
+    "C:\\Users\\peril\\.nuget\\packages\\npoi\\2.0.6\\npoi.2.0.6.nupkg.sha512",
+    "C:\\Users\\peril\\.nuget\\packages\\questpdf\\2025.12.1\\questpdf.2025.12.1.nupkg.sha512",
+    "C:\\Users\\peril\\.nuget\\packages\\sharpziplib\\0.86.0\\sharpziplib.0.86.0.nupkg.sha512",
     "C:\\Users\\peril\\.nuget\\packages\\sixlabors.imagesharp\\3.1.11\\sixlabors.imagesharp.3.1.11.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "message": "Package 'SharpZipLib' 0.86.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-cqj4-m2pc-v9m5",
+      "projectPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\BL\\BL.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\BL\\BL.csproj",
+      "libraryId": "SharpZipLib",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    },
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "message": "Package 'SharpZipLib' 0.86.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-m22m-h4rf-pwq3",
+      "projectPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\BL\\BL.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\BL\\BL.csproj",
+      "libraryId": "SharpZipLib",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "message": "Package 'DotNetTools 0.0.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net9.0'. This package may not be fully compatible with your project.",
+      "projectPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\BL\\BL.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\BL\\BL.csproj",
+      "libraryId": "DotNetTools",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "message": "Package 'ExcelAbstraction 0.0.1' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net9.0'. This package may not be fully compatible with your project.",
+      "projectPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\BL\\BL.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\BL\\BL.csproj",
+      "libraryId": "ExcelAbstraction",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "message": "Package 'ExcelAbstraction.NPOI 0.0.1' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net9.0'. This package may not be fully compatible with your project.",
+      "projectPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\BL\\BL.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\BL\\BL.csproj",
+      "libraryId": "ExcelAbstraction.NPOI",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "message": "Package 'NPOI 2.0.6' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net9.0'. This package may not be fully compatible with your project.",
+      "projectPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\BL\\BL.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\BL\\BL.csproj",
+      "libraryId": "NPOI",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "message": "Package 'SharpZipLib 0.86.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net9.0'. This package may not be fully compatible with your project.",
+      "projectPath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\BL\\BL.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\peril\\Documents\\OsobneRzeczy\\CSharp_dotnet\\Portfolio\\PortfolioBackend\\BL\\BL.csproj",
+      "libraryId": "SharpZipLib",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    }
+  ]
 }
