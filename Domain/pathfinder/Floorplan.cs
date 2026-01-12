@@ -20,4 +20,9 @@ public class Floorplan
         Scale = scale;
         Image = image;
     }
+
+    public Floorplan()
+    {
+        
+    }
 }

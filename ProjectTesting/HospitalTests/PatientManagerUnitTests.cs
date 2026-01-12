@@ -9,7 +9,7 @@ using Moq;
 
 namespace ProjectTesting.HospitalTests;
 
-public class PatientUnitTests
+public class PatientManagerUnitTests
 {
  
     private readonly Mock<IBaseRepository<Patient>> _patientRepositoryMock;
@@ -18,7 +18,7 @@ public class PatientUnitTests
 
     private readonly PatientManager _patientManager;
 
-    public PatientUnitTests()
+    public PatientManagerUnitTests()
     {
         _patientRepositoryMock = new Mock<IBaseRepository<Patient>>();
         _mapperMock = new Mock<IMapper>();

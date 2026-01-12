@@ -1,4 +1,5 @@
-﻿using Domain.hospital.types;
+﻿using System.Text.Json.Serialization;
+using Domain.hospital.types;
 
 namespace BL.hospital.dto;
 
@@ -6,6 +7,7 @@ public class DoctorDto
 {
     public Guid Id { get; set; }
     public Name FullName { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public Specialisation Specialisation { get; set; }
     public Location WorkAddress { get; set; }
 }

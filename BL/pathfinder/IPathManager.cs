@@ -1,4 +1,5 @@
 ﻿using BL.dto;
+using BL.pathfinder.dto;
 
 namespace BL.pathfinder;
 
