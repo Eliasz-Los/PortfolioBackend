@@ -9,7 +9,7 @@ using Moq;
 
 namespace ProjectTesting.HospitalTests;
 
-public class AppointmentUnitTests
+public class AppointmentManagerUnitTests
 {
     private readonly Mock<IAppointmentRepository> _appointmentRepository;
     private readonly Mock<IMapper> _mapperMock;
@@ -23,7 +23,7 @@ public class AppointmentUnitTests
     private readonly Mock<IInvoiceManager> _invoiceManagerMock;
 
     
-    public AppointmentUnitTests()
+    public AppointmentManagerUnitTests()
     {
         _patientManager = new Mock<IBaseManager<
             Patient, PatientDto, AddPatientDto>>();
@@ -157,4 +157,111 @@ public class AppointmentUnitTests
         Assert.Equal(appointmentDto.AppointmentDate, createdAppointment.AppointmentDate);
 
     }
+
+
+    [Fact]
+    public async Task AddAppointment_ThrowsException_WhenPatientDoesNotExist()
+    {
+        // Arrange
+        var patientId = Guid.NewGuid();
+        var doctorId = Guid.NewGuid();
+
+        // Patient bestaat NIET
+        _patientManager
+            .Setup(pm => pm.GetById(patientId))
+            .ThrowsAsync(new KeyNotFoundException($"Patient with ID {patientId} not found."));
+
+        var appointmentDto = new AddAppointmentDto
+        {
+            AppointmentDate = DateTime.Now,
+            PatientId = patientId,
+            DoctorId = doctorId
+        };
+
+        // Act & Assert
+        await Assert.ThrowsAsync<KeyNotFoundException>(async () =>
+        {
+            await _appointmentManager.Add(appointmentDto);
+        });
+    }
+
+    [Fact]
+    public async Task AddAppointment_ThrowsException_WhenDoctorDoesNotExist()
+    {
+        // Arrange
+        var patientId = Guid.NewGuid();
+        var doctorId = Guid.NewGuid();
+        
+        _doctorManager.Setup(doc => doc.GetById(doctorId))
+            .ThrowsAsync(new KeyNotFoundException($"Doctor with ID {doctorId} not found."));
+        //assert
+        
+        var appointmentDto = new AddAppointmentDto
+        {
+            AppointmentDate = DateTime.Now,
+            PatientId = patientId,
+            DoctorId = doctorId
+        };
+        // Act
+        await Assert.ThrowsAsync<KeyNotFoundException>(async () =>
+        {
+            await _appointmentManager.Add(appointmentDto);
+        });
+        
+    }
+
+
+    [Fact]
+    public async Task CompleteAppointment_SetsAppointmentStatusToCompleted_AndCreatesAnInvoice()
+    {
+        // Arrange
+        var appointmentId = Guid.NewGuid();
+        var patientId = Guid.NewGuid();
+        var doctorId = Guid.NewGuid();
+
+        var patient = new Patient(
+            new Name("PatientSecond", "Sloan"),
+            new DateOnly(1988, 5, 12),
+            "sec.sloan@mail.com",
+            "578-150-1224",
+            new Location("Mortselhaar", 154, "Antwerp", "2640", "Belgium"),
+            patientId
+        );
+
+        var doctor = new Doctor(
+            new Name("Dr.w John", "Doe"),
+            Specialisation.Cardiology,
+            new Location("Mortselhaar", 154, "Antwerp", "2640", "Belgium"),
+            doctorId
+        );
+
+        var appointment = new Appointment(DateTime.Now, patient, doctor, appointmentId);
+
+        _appointmentRepository
+            .Setup(repo => repo.ReadAppointmentWithRelationsById(appointmentId))
+            .ReturnsAsync(appointment);
+
+        // Act
+        await _appointmentManager.CompleteAppointment(appointmentId);
+
+        // Assert
+        _appointmentRepository.Verify(
+            repo => repo.Update(It.Is<Appointment>(
+                a => a.Status == AppointmentStatus.Completed
+            )),
+            Times.Once
+        );
+
+        _invoiceManagerMock.Verify(
+            im => im.Add(It.Is<Invoice>(invoice =>
+                invoice.Patient.Id == patientId &&
+                invoice.Amount == 100.00m &&
+                invoice.IsPaid == false &&
+                invoice.Title == "Medical Consultation"
+            )),
+            Times.Once
+        );
+    }
+
+
 }

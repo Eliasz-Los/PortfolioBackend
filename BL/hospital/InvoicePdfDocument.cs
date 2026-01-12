@@ -69,11 +69,11 @@ public class InvoicePdfDocument : IDocument
             col.Item().Table(table =>
             {
 
-                // Our columns in this case only 2 for now
+                // Our columns in this case only 2 for now Description & Amount
                 table.ColumnsDefinition(columns =>
                 {
-                    columns.RelativeColumn(3); // Description
-                    columns.RelativeColumn(1); // Amount
+                    columns.RelativeColumn(3); 
+                    columns.RelativeColumn(1); 
                 });
 
                 // Top table header

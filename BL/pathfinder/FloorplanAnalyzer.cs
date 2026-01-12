@@ -6,17 +6,21 @@ using Point = Domain.pathfinder.Point;
 
 namespace BL.pathfinder;
 
-public class FloorplanAnalyzer
+public class FloorplanAnalyzer : IFloorplanAnalyzer
 {
     private readonly ILogger<AStarPathfinding> _logger;
-    static int _blackPixelCount = 0;
 
     public FloorplanAnalyzer(ILogger<AStarPathfinding> logger)
     {
         _logger = logger;
     }
 
-    public (Point start, Point end, HashSet<Point>) GetWalkablePoints(string imagePath, Point startCoords, Point endCoords)
+    public FloorplanAnalyzer()
+    {
+        
+    }
+
+    public (Point start, Point end, HashSet<Point> walkablePoints) GetWalkablePoints(string imagePath, Point startCoords, Point endCoords)
     {
         // ConcurrentBag is thread-safe
         var walkablePoints = new ConcurrentBag<Point>();
@@ -51,7 +55,6 @@ public class FloorplanAnalyzer
                     }
                 }
             });
-            _logger.LogInformation("Total black pixels: {count}",_blackPixelCount );
         }
         
         if (startPoint == null || endPoint == null)
@@ -70,7 +73,6 @@ public class FloorplanAnalyzer
         
         if (pixel.R < threshold && pixel.G < threshold && pixel.B < threshold)
         {
-            _blackPixelCount++;
             return true;
         }
         else

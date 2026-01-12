@@ -24,8 +24,8 @@ builder.Services.AddDbContext<PortfolioDbContext>( options =>
 //services
 //pathfinder
 builder.Services.AddScoped<IPathManager, PathManager>();
-builder.Services.AddScoped<AStarPathfinding>();
-builder.Services.AddScoped<FloorplanAnalyzer>();
+builder.Services.AddScoped<IPathfinding, AStarPathfinding>();
+builder.Services.AddScoped<IFloorplanAnalyzer, FloorplanAnalyzer>();
 builder.Services.AddScoped<IFloorplanRepository,FloorplanRepository>();
 builder.Services.AddScoped<IFloorplanManager,FloorplanManager>();
 //hospital

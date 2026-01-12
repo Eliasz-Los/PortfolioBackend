@@ -1,5 +1,7 @@
 ﻿
-namespace BL.dto;
+using BL.dto;
+
+namespace BL.pathfinder.dto;
 
 public class PathRequestDto
 {

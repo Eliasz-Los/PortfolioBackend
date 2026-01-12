@@ -8,8 +8,7 @@ namespace BL.pathfinder;
  *  This keeps the main thread free for other tasks.
  */
 
-//TODO: somehow with the test_floor image I cannot get a path to the top left corner, like to far in big_room1 and it cannot find a way
-public class AStarPathfinding
+public class AStarPathfinding : IPathfinding
 {
     private readonly ILogger<AStarPathfinding> _logger;
 
@@ -135,4 +134,5 @@ public class AStarPathfinding
         path.Reverse();
         return path;
     }
+    
 }

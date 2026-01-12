@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BL.dto;
+using BL.pathfinder.dto;
 using Domain;
 using Domain.pathfinder;
 using Microsoft.Extensions.Logging;
@@ -11,11 +12,11 @@ public class PathManager : IPathManager
     private readonly ILogger<PathManager> _logger;
     private readonly IFloorplanManager _floorplanManager;
     private readonly IMapper _mapper;
-    private readonly AStarPathfinding _pathfinding;
-    private readonly  FloorplanAnalyzer _floorplanAnalyzer;
+    private readonly IPathfinding _pathfinding;
+    private readonly  IFloorplanAnalyzer _floorplanAnalyzer;
     
 
-    public PathManager(ILogger<PathManager> logger, IFloorplanManager floorplanManager, IMapper mapper, AStarPathfinding pathfinding, FloorplanAnalyzer floorplanAnalyzer)
+    public PathManager(ILogger<PathManager> logger, IFloorplanManager floorplanManager, IMapper mapper, IPathfinding pathfinding, IFloorplanAnalyzer floorplanAnalyzer)
     {
         _logger = logger;
         _floorplanManager = floorplanManager;
