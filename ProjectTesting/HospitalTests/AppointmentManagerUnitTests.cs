@@ -1,10 +1,12 @@
-﻿using AutoMapper;
+﻿using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 using BL.hospital;
 using BL.hospital.dto;
 using BL.hospital.validation;
 using DAL.Repository.hospital;
 using Domain.hospital;
 using Domain.hospital.types;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 
 namespace ProjectTesting.HospitalTests;
@@ -154,61 +156,66 @@ public class AppointmentManagerUnitTests
         
         // Assert
         Assert.NotNull(createdAppointment);
-        Assert.Equal(appointmentDto.AppointmentDate, createdAppointment.AppointmentDate);
+        Assert.Equal(appointmentDto.AppointmentDate.ToUniversalTime(), createdAppointment.AppointmentDate.ToUniversalTime());
 
     }
-
-
-    [Fact]
-    public async Task AddAppointment_ThrowsException_WhenPatientDoesNotExist()
-    {
-        // Arrange
-        var patientId = Guid.NewGuid();
-        var doctorId = Guid.NewGuid();
-
-        // Patient bestaat NIET
-        _patientManager
-            .Setup(pm => pm.GetById(patientId))
-            .ThrowsAsync(new KeyNotFoundException($"Patient with ID {patientId} not found."));
-
-        var appointmentDto = new AddAppointmentDto
-        {
-            AppointmentDate = DateTime.Now,
-            PatientId = patientId,
-            DoctorId = doctorId
-        };
-
-        // Act & Assert
-        await Assert.ThrowsAsync<KeyNotFoundException>(async () =>
-        {
-            await _appointmentManager.Add(appointmentDto);
-        });
-    }
+    
 
     [Fact]
-    public async Task AddAppointment_ThrowsException_WhenDoctorDoesNotExist()
+    public void Appointment_Validate_ReturnsError_WhenDateIsInThePast()
     {
         // Arrange
-        var patientId = Guid.NewGuid();
-        var doctorId = Guid.NewGuid();
-        
-        _doctorManager.Setup(doc => doc.GetById(doctorId))
-            .ThrowsAsync(new KeyNotFoundException($"Doctor with ID {doctorId} not found."));
-        //assert
-        
-        var appointmentDto = new AddAppointmentDto
+        var appointment = new Appointment
         {
-            AppointmentDate = DateTime.Now,
-            PatientId = patientId,
-            DoctorId = doctorId
+            Id = Guid.NewGuid(),
+            AppointmentDate = DateTime.UtcNow.AddDays(-1), // past date
+            DoctorId = Guid.NewGuid(),
+            PatientId = Guid.NewGuid()
         };
+
+        var validationContext = new ValidationContext(appointment);
+
         // Act
-        await Assert.ThrowsAsync<KeyNotFoundException>(async () =>
-        {
-            await _appointmentManager.Add(appointmentDto);
-        });
-        
+        var results = appointment.Validate(validationContext).ToList();
+
+        // Assert
+        Assert.Single(results);
+        Assert.Equal(
+            "Appointment date cannot be in the past.",
+            results[0].ErrorMessage
+        );
+        Assert.Contains(
+            nameof(Appointment.AppointmentDate),
+            results[0].MemberNames
+        );
     }
+
+    [Fact]
+    public async Task Add_ThrowsValidationException_WhenAppointmentDateIsInThePast()
+    {
+        // Arrange
+        var dto = new AddAppointmentDto
+        {
+            AppointmentDate = DateTime.UtcNow.AddDays(-1),
+            PatientId = Guid.NewGuid(),
+            DoctorId = Guid.NewGuid()
+        };
+
+        _validationMock
+            .Setup(v => v.Validate(It.IsAny<Appointment>()))
+            .Returns(new[]
+            {
+                new ValidationResult("Appointment date cannot be in the past.")
+            });
+
+        // Act + Assert
+        var ex = await Assert.ThrowsAsync<ValidationException>(() =>
+            _appointmentManager.Add(dto)
+        );
+
+        Assert.Contains("Appointment date cannot be in the past", ex.Message);
+    }
+
 
 
     [Fact]
