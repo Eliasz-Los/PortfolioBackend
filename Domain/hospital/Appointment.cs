@@ -9,9 +9,11 @@ public class Appointment : BaseEntity, IValidatableObject
     public DateTime AppointmentDate { get; set; }
     public AppointmentStatus Status { get; set; } = AppointmentStatus.Scheduled;
     public Patient Patient { get; set; }
+    public Guid PatientId { get; set; }
     public Doctor Doctor { get; set; }
+    public Guid DoctorId { get; set; }
     
-    public Appointment(DateTime appointmentDate, Patient patient, Doctor doctor, Guid id)
+    public Appointment(DateTime appointmentDate, Patient patient, Guid patientId, Doctor doctor, Guid doctorId, Guid id)
     {
         AppointmentDate = appointmentDate;
         Patient = patient;
@@ -20,6 +22,14 @@ public class Appointment : BaseEntity, IValidatableObject
     }
     
     public Appointment(){}
+
+    public Appointment(Guid id, Guid patientId, Guid doctorId, DateTime appointmentDate)
+    {
+        Id = id;
+        PatientId = patientId;
+        DoctorId = doctorId;
+        AppointmentDate = appointmentDate;
+    }
 
     public void MarkAsCompleted()
     {

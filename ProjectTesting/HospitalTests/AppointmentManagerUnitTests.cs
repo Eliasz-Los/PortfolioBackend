@@ -83,8 +83,8 @@ public class AppointmentManagerUnitTests
 
 
 
-        var apppointment1 = new Appointment(DateTime.Now, patient1, doctor1, Guid.NewGuid());
-        var apppointment2 = new Appointment(DateTime.Now, patient2, doctor2, Guid.NewGuid());
+        var apppointment1 = new Appointment(DateTime.Now, patient1, patient1.Id, doctor1, doctor1.Id, Guid.NewGuid());
+        var apppointment2 = new Appointment(DateTime.Now, patient2,patient2.Id, doctor2, doctor2.Id, Guid.NewGuid());
 
         _appointmentRepository.Setup(repo => repo.ReadAppointmentsByPatientId(patientId))
             .ReturnsAsync(new List<Appointment> { apppointment1 });
@@ -235,7 +235,7 @@ public class AppointmentManagerUnitTests
             doctorId
         );
 
-        var appointment = new Appointment(DateTime.Now, patient, doctor, appointmentId);
+        var appointment = new Appointment(DateTime.Now, patient, patient.Id, doctor, doctor.Id, appointmentId);
 
         _appointmentRepository
             .Setup(repo => repo.ReadAppointmentWithRelationsById(appointmentId))
