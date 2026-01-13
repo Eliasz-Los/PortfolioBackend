@@ -30,6 +30,17 @@ public class DoctorManager : IBaseManager<Doctor, DoctorDto, AddDoctorDto>
         
         return _mapper.Map<DoctorDto>(doctor);
     }
+    
+    public async Task<Doctor?> GetDoctorById(Guid id)
+    {
+        var doctor =  await _repository.ReadById(id);
+        if (doctor == null)
+        {
+            throw new KeyNotFoundException($"Doctor with ID {id} not found.");
+        }
+
+        return doctor;
+    }
 
     public async Task<IEnumerable<DoctorDto>> GetAll()
     {

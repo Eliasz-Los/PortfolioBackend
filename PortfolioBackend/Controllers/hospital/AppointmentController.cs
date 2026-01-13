@@ -9,17 +9,19 @@ namespace PortfolioBackend.Controllers.hospital;
 [Route("api/hospital/appointments")]
 public class AppointmentController : ControllerBase
 {
-    private readonly AppointmentManager _appointmentManager;
+    private readonly IBaseManager<Appointment, Appointment, AddAppointmentDto> _appointmentManager;
+    private readonly IAppointmentManager _appointmentManagerAddition;
     
-    public AppointmentController(AppointmentManager appointmentManager)
+    public AppointmentController(IBaseManager<Appointment, Appointment, AddAppointmentDto> appointmentManager, IAppointmentManager appointmentManagerAddition)
     {
         _appointmentManager = appointmentManager;
+        _appointmentManagerAddition = appointmentManagerAddition;
     }
 
     [HttpGet("patients/{patientId:guid}")]
     public async Task<IActionResult> GetPatientAppointments(Guid patientId)
     {
-        var appointments =  await _appointmentManager.GetAllAppointmentsFromPatientById(patientId);
+        var appointments =  await _appointmentManagerAddition.GetAllAppointmentsFromPatientById(patientId);
 
         if (!appointments.Any())
         {
@@ -32,7 +34,7 @@ public class AppointmentController : ControllerBase
     [HttpGet("doctors/{doctorId:guid}")]
     public async Task<IActionResult> GetDoctorAppointments( Guid doctorId)
     {
-        var appointments = await _appointmentManager.GetAllAppointmentsFromDoctorById(doctorId);
+        var appointments = await _appointmentManagerAddition.GetAllAppointmentsFromDoctorById(doctorId);
 
         if (!appointments.Any())
         {
@@ -41,6 +43,20 @@ public class AppointmentController : ControllerBase
         
         return Ok(appointments);
     }
+    
+    [HttpGet("doctors/{doctorId:guid}/availability")]
+    public async Task<IActionResult> GetDoctorAvailability(
+        Guid doctorId,
+        [FromQuery] DateOnly from,
+        [FromQuery] DateOnly to)
+    {
+        var availability = await _appointmentManagerAddition
+            .GetDoctorAvailability(doctorId, from, to);
+
+        return Ok(availability);
+    }
+
+    
     
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
@@ -59,7 +75,7 @@ public class AppointmentController : ControllerBase
     [HttpPost("{id:guid}/complete")]
     public async Task<IActionResult> CompleteAppointment(Guid id)
     {
-       await _appointmentManager.CompleteAppointment(id);
+       await _appointmentManagerAddition.CompleteAppointment(id);
        return NoContent();
     }
     

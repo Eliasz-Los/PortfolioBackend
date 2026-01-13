@@ -33,4 +33,13 @@ public class AppointmentRepository : BaseRepository<Appointment>, IAppointmentRe
             .Where(appointment => appointment.Doctor.Id == doctorId)
             .ToListAsync();
     }
+
+    public async Task<IEnumerable<Appointment>> ReadAppointmentsForDoctorInDateRange(Guid doctorId, DateTime from, DateTime to)
+    {
+        return await _dbSet.Include(a => a.Doctor)
+            .Where(a => a.Doctor.Id == doctorId 
+                && a.AppointmentDate >= from 
+                && a.AppointmentDate <= to)
+            .ToListAsync();
+    }
 }

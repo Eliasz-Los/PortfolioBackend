@@ -7,7 +7,7 @@ using Domain.hospital;
 
 namespace BL.hospital;
 
-public class AppointmentManager : IBaseManager<Appointment, Appointment, AddAppointmentDto>
+public class AppointmentManager : IBaseManager<Appointment, Appointment, AddAppointmentDto>, IAppointmentManager
 {
     private readonly IAppointmentRepository _appointmentRepository;
     private readonly IBaseManager<Patient, PatientDto, AddPatientDto> _patientManager;
@@ -51,12 +51,13 @@ public class AppointmentManager : IBaseManager<Appointment, Appointment, AddAppo
 
     public async Task<Appointment> Add(AddAppointmentDto appointment)
     {
-        PatientDto? patient = await _patientManager.GetById(appointment.PatientId);
-        DoctorDto? doctor = await _doctorManager.GetById(appointment.DoctorId);
-        Appointment newAppointment = new Appointment(appointment.AppointmentDate, 
-            _mapper.Map<Patient>(patient),
-            _mapper.Map<Doctor>(doctor),
-            Guid.NewGuid());
+        Appointment newAppointment = new Appointment
+        {
+            Id = Guid.NewGuid(),
+            AppointmentDate = appointment.AppointmentDate.ToUniversalTime(),
+            PatientId = appointment.PatientId,
+            DoctorId = appointment.DoctorId
+        };
         
         var validationResults = _appointmentValidation.Validate(newAppointment).ToList();
         if (validationResults.Any())
@@ -96,5 +97,78 @@ public class AppointmentManager : IBaseManager<Appointment, Appointment, AddAppo
         
         await _appointmentRepository.Update(appointment);
         await _invoiceManager.Add(invoice);
+    }
+
+    // Perhaps split this method into more reusable parts in the future
+    public async Task<IEnumerable<DoctorAvailabilityDto>> GetDoctorAvailability(
+        Guid doctorId,
+        DateOnly from,
+        DateOnly to)
+    {
+        var fromUtc = new DateTime(from.Year, from.Month, from.Day, 0, 0, 0, DateTimeKind.Utc);
+        var toUtc = new DateTime(to.Year, to.Month, to.Day, 23, 59, 59, DateTimeKind.Utc);
+        
+        var appointments = await _appointmentRepository
+            .ReadAppointmentsForDoctorInDateRange(
+                doctorId,
+                fromUtc,
+                toUtc
+            );
+
+        Console.WriteLine($"Appointments count: {appointments.Count()}");
+        foreach (var a in appointments)
+        {
+            Console.WriteLine($"Appointment: {a.AppointmentDate:O} Doctor: {a.Doctor.Id}");
+        }
+
+        var normalized = appointments.Select(a =>
+        {
+            var local = DateTime.SpecifyKind(a.AppointmentDate, DateTimeKind.Utc).ToLocalTime();
+            var roundedHour = (local.Minute > 0) ? local.Hour + 1 : local.Hour;
+            roundedHour = Math.Min(roundedHour, HospitalConstants.WorkingHoursEnd - 1);
+
+            return new
+            {
+                Date = DateOnly.FromDateTime(local),
+                Hour = roundedHour
+            };
+        });
+        
+        var grouped = normalized.GroupBy(a => a.Date);
+
+        var result = new List<DoctorAvailabilityDto>();
+
+        for (var date = from; date <= to; date = date.AddDays(1))
+        {
+            if (date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
+                continue;
+
+            var allHours = Enumerable
+                .Range(HospitalConstants.WorkingHoursStart, HospitalConstants.WorkingHoursEnd)
+                .ToList();
+
+            var takenHours = grouped
+                .FirstOrDefault(g => g.Key == date)?
+                .Select(a => a.Hour)
+                .Distinct()
+                .ToList() ?? new List<int>();
+            Console.WriteLine($"Date: {date}, TakenHours: {string.Join(",", takenHours)}");
+            foreach (var g in grouped)
+            {
+                Console.WriteLine($"Group Date: {g.Key}, Hours: {string.Join(",", g.Select(a => a.Hour))}");
+            }
+
+            var availableHours = allHours
+                .Except(takenHours)
+                .ToList();
+            result.Add(new DoctorAvailabilityDto
+            {
+                Date = date,
+                AvailableHours = availableHours,
+                TakenHours = takenHours
+            });
+        }
+
+        return result;
     }
 }

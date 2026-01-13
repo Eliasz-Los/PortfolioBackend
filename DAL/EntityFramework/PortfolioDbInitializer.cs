@@ -84,10 +84,10 @@ public class PortfolioDbInitializer
             Doctor doc = doctors[i % doctors.Count];
             Patient patient = patients[i % doctors.Count];
             appointments.Add(new Appointment(
-                DateTime.UtcNow.AddDays(i),
-                patient,
-                doc,
-                Guid.NewGuid()));
+                Guid.NewGuid(),
+                patient.Id,
+                doc.Id,
+                DateTime.UtcNow.AddDays(i)));
         }
         return appointments;
     }
