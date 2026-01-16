@@ -18,7 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="..\BL\hospital\invoice\assets\logo.png">
+        <None Include="..\BL\Hospital\invoice\assets\logo.png">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>assets\logo.png</TargetPath>
         </None>
