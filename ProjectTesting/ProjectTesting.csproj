@@ -32,8 +32,15 @@
 
 
  
-    <ItemGroup>
+ <!--   <ItemGroup>
         <None Include="..\BL\hospital\invoice\assets\logo.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <TargetPath>assets\logo.png</TargetPath>
+        </None>
+    </ItemGroup>-->
+    <ItemGroup>
+        <None Include="$(MSBuildProjectDirectory)\..\BL\Hospital\invoice\assets\logo.png"
+              Condition="Exists('$(MSBuildProjectDirectory)\..\BL\Hospital\invoice\assets\logo.png')">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>assets\logo.png</TargetPath>
         </None>
