@@ -1,13 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using BL.hospital.dto;
+using BL.hospital.invoice;
 using BL.hospital.validation;
 using DAL.Repository.hospital;
 using Domain.hospital;
 
 namespace BL.hospital;
 
-public class AppointmentManager : IBaseManager<Appointment, Appointment, AddAppointmentDto>, IAppointmentManager
+public class AppointmentManager : IBaseManager<Appointment, AppointmentDto, AddAppointmentDto>, IAppointmentManager
 {
     private readonly IAppointmentRepository _appointmentRepository;
     private readonly IBaseManager<Patient, PatientDto, AddPatientDto> _patientManager;
@@ -29,22 +30,24 @@ public class AppointmentManager : IBaseManager<Appointment, Appointment, AddAppo
         _invoiceManager = invoiceManager;
     }
 
-    public async Task<IEnumerable<Appointment>> GetAllAppointmentsFromPatientById(Guid patientId)
+    public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsFromPatientById(Guid patientId)
     {
-        return await _appointmentRepository.ReadAppointmentsByPatientId(patientId);
+        var appointments = await _appointmentRepository.ReadAppointmentsByPatientId(patientId);
+        return _mapper.Map<IEnumerable<AppointmentDto>>(appointments);
     }
 
-    public async Task<IEnumerable<Appointment>> GetAllAppointmentsFromDoctorById(Guid doctorId)
+    public async Task<IEnumerable<AppointmentDto>> GetAllAppointmentsFromDoctorById(Guid doctorId)
     {
-        return await _appointmentRepository.ReadAppointmentsByDoctorId(doctorId);
+         var appointments =  await _appointmentRepository.ReadAppointmentsByDoctorId(doctorId);
+         return _mapper.Map<IEnumerable<AppointmentDto>>(appointments);
     }
 
-    public Task<Appointment?> GetById(Guid id)
+    public Task<AppointmentDto?> GetById(Guid id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<Appointment>> GetAll()
+    public Task<IEnumerable<AppointmentDto>> GetAll()
     {
         throw new NotImplementedException();
     }
@@ -90,7 +93,7 @@ public class AppointmentManager : IBaseManager<Appointment, Appointment, AddAppo
             DueDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30)),
             Title = "Medical Consultation",
             Description =
-                $"Invoice for appointment on {appointment.AppointmentDate:yyyy-MM-dd} with Dr. {appointment.Doctor.FullName}",
+                $"Invoice for appointment on {appointment.AppointmentDate:yyyy-MM-dd} with Dr. {appointment.Doctor.FullName.FirstName} {appointment.Doctor.FullName.LastName}",
             InvoiceNumber = $"INV-{DateTime.UtcNow:yyyyMMddHHmmss}-{appointment.Id.ToString().Substring(0, 8)}",
             IsPaid = false
         };
@@ -114,13 +117,7 @@ public class AppointmentManager : IBaseManager<Appointment, Appointment, AddAppo
                 fromUtc,
                 toUtc
             );
-
-        Console.WriteLine($"Appointments count: {appointments.Count()}");
-        foreach (var a in appointments)
-        {
-            Console.WriteLine($"Appointment: {a.AppointmentDate:O} Doctor: {a.Doctor.Id}");
-        }
-
+        
         var normalized = appointments.Select(a =>
         {
             var local = DateTime.SpecifyKind(a.AppointmentDate, DateTimeKind.Utc).ToLocalTime();
@@ -152,15 +149,11 @@ public class AppointmentManager : IBaseManager<Appointment, Appointment, AddAppo
                 .Select(a => a.Hour)
                 .Distinct()
                 .ToList() ?? new List<int>();
-            Console.WriteLine($"Date: {date}, TakenHours: {string.Join(",", takenHours)}");
-            foreach (var g in grouped)
-            {
-                Console.WriteLine($"Group Date: {g.Key}, Hours: {string.Join(",", g.Select(a => a.Hour))}");
-            }
 
             var availableHours = allHours
                 .Except(takenHours)
                 .ToList();
+            
             result.Add(new DoctorAvailabilityDto
             {
                 Date = date,

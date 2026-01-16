@@ -9,10 +9,10 @@ namespace PortfolioBackend.Controllers.hospital;
 [Route("api/hospital/appointments")]
 public class AppointmentController : ControllerBase
 {
-    private readonly IBaseManager<Appointment, Appointment, AddAppointmentDto> _appointmentManager;
+    private readonly IBaseManager<Appointment, AppointmentDto, AddAppointmentDto> _appointmentManager;
     private readonly IAppointmentManager _appointmentManagerAddition;
     
-    public AppointmentController(IBaseManager<Appointment, Appointment, AddAppointmentDto> appointmentManager, IAppointmentManager appointmentManagerAddition)
+    public AppointmentController(IBaseManager<Appointment, AppointmentDto, AddAppointmentDto> appointmentManager, IAppointmentManager appointmentManagerAddition)
     {
         _appointmentManager = appointmentManager;
         _appointmentManagerAddition = appointmentManagerAddition;

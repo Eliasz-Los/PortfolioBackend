@@ -1,7 +1,7 @@
 ﻿using BL.hospital.dto;
 using Domain.hospital;
 
-namespace BL.hospital;
+namespace BL.hospital.invoice;
 
 public interface IInvoiceManager
 {

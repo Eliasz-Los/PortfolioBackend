@@ -1,9 +1,11 @@
-﻿using Domain.hospital;
+﻿using System.Net.Mail;
+using System.Reflection;
+using Domain.hospital;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 
-namespace BL.hospital;
+namespace BL.hospital.invoice;
 
 public class InvoicePdfDocument : IDocument
 {
@@ -41,23 +43,33 @@ public class InvoicePdfDocument : IDocument
             row.RelativeItem().Column(col =>
             {
                 col.Spacing(5);
-                col.Item().Text($"{_invoice.Title}").FontSize(20).Bold();
+
+                col.Item().AlignLeft()
+                    .Image(GetLogoPath()).FitWidth();                
+                // Invoice title
+                col.Item().PaddingTop(5).Text($"{_invoice.Title}")
+                    .FontSize(20)
+                    .Bold();
+
+                // Invoice metadata
                 col.Item().Text($"Invoice Number: {_invoice.InvoiceNumber}");
                 col.Item().Text($"Date: {_invoice.InvoiceDate}");
                 col.Item().Text($"Due Date: {_invoice.DueDate}");
             });
+
             row.ConstantItem(220).Column(col =>
             {
                 col.Spacing(5);
-                col.Item().Text("Addressed to: ").Bold();
+                col.Item().Text("Bill To:").Bold();
                 col.Item().Text($"{_invoice.Patient.FullName.FirstName} {_invoice.Patient.FullName.LastName}")
                     .FontSize(16).Bold().FontColor(Colors.Blue.Medium);
-                col.Item().Text($"{_invoice.Patient.Location.StreetName} {_invoice.Patient.Location.StreetNumber}").FontSize(12);
-                col.Item().Text($"{_invoice.Patient.Location.City} {_invoice.Patient.Location.PostalCode}").FontSize(12);
-                col.Item().Text($"{_invoice.Patient.Location.Country}").FontSize(12);
+                col.Item().Text($"{_invoice.Patient.Location.StreetName} {_invoice.Patient.Location.StreetNumber}");
+                col.Item().Text($"{_invoice.Patient.Location.PostalCode} { _invoice.Patient.Location.City}");
+                col.Item().Text($"{_invoice.Patient.Location.Country}");
             });
         });
     }
+
     
     private void ComposeContent(IContainer container)
     {
@@ -79,12 +91,9 @@ public class InvoicePdfDocument : IDocument
                 // Top table header
                 table.Header(header =>
                 {
-                    header.Cell().Text("Description").Bold();
-                    header.Cell().AlignRight().Text("Amount").Bold();
-
-                    header.Cell().ColumnSpan(2)
-                        .PaddingTop(5)
-                        .LineHorizontal(1);
+                    header.Cell().Background(Colors.Grey.Lighten2).Text("Description").Bold();
+                    header.Cell().Background(Colors.Grey.Lighten2).AlignRight().Text("Amount").Bold();
+                    header.Cell().ColumnSpan(2).PaddingTop(5).LineHorizontal(1);
                 });
 
                 // Rows of our table
@@ -102,16 +111,37 @@ public class InvoicePdfDocument : IDocument
                     text.Span(_invoice.Amount.ToString("C")).Bold();
                 });
             });
+            
+            col.Item().Column(payment =>
+            {
+                payment.Spacing(5);
+                payment.Item().Text("Please pay the amount to the following account:").Bold();
+                payment.Item().Text("IBAN: BE12 3456 7890 1234").FontSize(12);
+                payment.Item().Text("BIC: ABCDBEBB").FontSize(12);
+                payment.Item().Text($"Structured message: INV-{_invoice.InvoiceNumber}").FontSize(12);
+            });
+
         });
     }
     
     private void ComposeFooter(IContainer container)
     {
-        container.AlignCenter().Text(x =>
+        container.Row(row =>
         {
-            x.Span("Page ");
-            x.CurrentPageNumber();
+            row.RelativeItem().Text("Contact: info@myhospital.be | +32 123 456 789")
+                .FontSize(9).FontColor(Colors.Grey.Darken1);
+            row.ConstantItem(100).AlignRight().Text(x =>
+            {
+                x.Span("Page ");
+                x.CurrentPageNumber();
+                x.Span(" / ");
+                x.TotalPages();
+            });
         });
     }
 
+    private static string GetLogoPath()
+    {
+           return Path.Combine(AppContext.BaseDirectory,"assets" ,"logo.png"); 
+    }
 }

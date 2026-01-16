@@ -10,5 +10,8 @@ public class AppointmentMappingProfile : Profile
     {
         CreateMap<AddAppointmentDto, Appointment>();
         CreateMap<Appointment, AddAppointmentDto>();
+
+        CreateMap<AppointmentDto, Appointment>();
+        CreateMap<Appointment, AppointmentDto>();
     }
 }

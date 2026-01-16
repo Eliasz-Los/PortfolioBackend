@@ -6,8 +6,8 @@ namespace BL.hospital;
 public interface IAppointmentManager
 {
     //TODO appointment dto
-    public Task<IEnumerable<Appointment>> GetAllAppointmentsFromPatientById(Guid patientId);
-    public Task<IEnumerable<Appointment>> GetAllAppointmentsFromDoctorById(Guid doctorId);
+    public Task<IEnumerable<AppointmentDto>> GetAllAppointmentsFromPatientById(Guid patientId);
+    public Task<IEnumerable<AppointmentDto>> GetAllAppointmentsFromDoctorById(Guid doctorId);
 
     public Task CompleteAppointment(Guid appointmentId);
 
