@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace PortfolioBackend.Controllers.hospital;
 
 [ApiController]
-[Route("api/hospital/patients")]
+[Route("api/Hospital/patients")]
 public class PatientController : ControllerBase
 {
     private readonly IBaseManager<Patient, PatientDto, AddPatientDto> _patientManager;

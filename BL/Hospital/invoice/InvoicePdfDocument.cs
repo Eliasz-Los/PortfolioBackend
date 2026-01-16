@@ -45,7 +45,7 @@ public class InvoicePdfDocument : IDocument
                 col.Spacing(5);
 
                 col.Item().AlignLeft()
-                    .Image(GetLogoPath()).FitWidth();                
+                    .Image(AssetPaths.FromBaseDirectory("assets", "logo.png")).FitWidth();                
                 // Invoice title
                 col.Item().PaddingTop(5).Text($"{_invoice.Title}")
                     .FontSize(20)
@@ -143,5 +143,21 @@ public class InvoicePdfDocument : IDocument
     private static string GetLogoPath()
     {
            return Path.Combine(AppContext.BaseDirectory,"assets" ,"logo.png"); 
+    }
+    
+ 
+}
+
+internal static class AssetPaths
+{
+    public static string FromBaseDirectory(params string[] parts)
+    {
+        var baseDir = AppContext.BaseDirectory;
+        var path = Path.Combine(new[] { baseDir }.Concat(parts).ToArray());
+
+        if (!File.Exists(path))
+            throw new FileNotFoundException($"Asset not found: {path}", path);
+
+        return path;
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace PortfolioBackend.Controllers.hospital;
 
 [ApiController]
-[Route("api/hospital/appointments")]
+[Route("api/Hospital/appointments")]
 public class AppointmentController : ControllerBase
 {
     private readonly IBaseManager<Appointment, AppointmentDto, AddAppointmentDto> _appointmentManager;

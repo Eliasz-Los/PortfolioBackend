@@ -50,7 +50,6 @@ public class AppointmentManagerUnitTests
         );
     }
     
-    //TODO fix this test
     [Fact]
     public async Task GetAppointmentsOfPatientById_ReturnsAppointments_WhenAppointmentsExist()
     {
@@ -92,6 +91,25 @@ public class AppointmentManagerUnitTests
 
         _appointmentRepository.Setup(repo => repo.ReadAppointmentsByPatientId(patientId))
             .ReturnsAsync(new List<Appointment> { apppointment1 });
+        
+        //Mapping very important
+        
+        var mappedDtos = new List<AppointmentDto>
+        {
+            new AppointmentDto
+            {
+                Id = apppointment1.Id,
+                AppointmentDate = apppointment1.AppointmentDate,
+                Status = apppointment1.Status,
+                Patient = new PatientDto { Id = patientId },
+                Doctor = new DoctorDto { Id = doctor1.Id }
+            }
+        };
+
+        _mapperMock
+            .Setup(m => m.Map<IEnumerable<AppointmentDto>>(It.IsAny<IEnumerable<Appointment>>()))
+            .Returns(mappedDtos);
+        
         // Act
         var result = await _appointmentManager.GetAllAppointmentsFromPatientById(patientId);
 
