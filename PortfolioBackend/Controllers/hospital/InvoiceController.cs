@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace PortfolioBackend.Controllers.hospital
 {
-    [Route("api/hospital/invoices")]
+    [Route("api/Hospital/invoices")]
     [ApiController]
     public class InvoiceController : ControllerBase
     {

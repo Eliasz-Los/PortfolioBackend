@@ -23,13 +23,13 @@ public class PortfolioDbInitializer
         context.Floorplans.AddRange(floorplan1, testFloorplan, maze);
         
         //Hospital seed data
-        var patients = GeneratePatients(100);
+        var patients = GeneratePatients(10000);
         context.Patients.AddRange(patients);
 
-        var doctors = GenerateDoctors(10);
+        var doctors = GenerateDoctors(100);
         context.Doctors.AddRange(doctors);
 
-        var appointments = GenerateAppointments(50, patients, doctors);
+        var appointments = GenerateAppointments(500, patients, doctors);
         context.Appointments.AddRange(appointments);
         
         var invoices = GenerateInvoicesForPatients(patients);
@@ -38,7 +38,34 @@ public class PortfolioDbInitializer
         context.SaveChanges();
         
     }
+
+
+    private static readonly string[] FirstNames =
+    {
+        "Adam", "Adrian", "Aiden", "Alan", "Albert", "Aleksander", "Alex", "Andrew", "Anthony", "Arthur",
+        "Benjamin", "Bernard", "Blake", "Brandon", "Brian", "Caleb", "Cameron", "Carl", "Charles", "Christopher",
+        "Daniel", "David", "Dominic", "Dylan", "Edward", "Elias", "Elliot", "Emil", "Eric", "Ethan",
+        "Felix", "Finn", "Frank", "Gabriel", "George", "Gordon", "Harry", "Henry", "Hugo", "Ian",
+        "Isaac", "Jack", "Jacob", "James", "Jason", "Jasper", "Jeremy", "Jonas", "Jonathan", "Jordan",
+        "Joseph", "Julian", "Kai", "Kevin", "Kris", "Liam", "Logan", "Louis", "Lucas", "Luka",
+        "Mark", "Martin", "Mateo", "Matthew", "Max", "Michael", "Milan", "Nathan", "Nicholas", "Noah",
+        "Oliver", "Oscar", "Owen", "Patrick", "Paul", "Peter", "Philip", "Quentin", "Rafael", "Raymond",
+        "Richard", "Robert", "Ryan", "Samuel", "Scott", "Sebastian", "Simon", "Stanley", "Stefan", "Thomas",
+        "Timothy", "Tobias", "Tristan", "Victor", "Vincent", "Walter", "William", "Xavier", "Yannick", "Zachary"
+    };
     
+    private static readonly string[] LastNames =
+    {
+        "Adams","Anderson","Baker","Barnes","Bell","Bennett","Brooks","Brown","Campbell","Carter",
+        "Clark","Coleman","Collins","Cook","Cooper","Cox","Davis","Diaz","Edwards","Evans",
+        "Fisher","Fleming","Foster","Garcia","Gonzalez","Gray","Green","Hall","Harris","Hayes",
+        "Henderson","Hughes","Jackson","James","Jenkins","Johnson","Jones","Kelly","King","Lee",
+        "Lewis","Lopez","Martin","Martinez","Miller","Mitchell","Moore","Morgan","Morris","Murphy",
+        "Nelson","Nguyen","Parker","Perez","Phillips","Powell","Price","Ramirez","Reed","Richardson",
+        "Rivera","Roberts","Robinson","Rodriguez","Rogers","Ross","Russell","Sanders","Scott","Simmons",
+        "Smith","Stewart","Taylor","Thomas","Thompson","Torres","Turner","Walker","Ward","Watson",
+        "White","Williams","Wilson","Wood","Wright","Young","Nowak","Kowalski","Wojcik","Kaminski"
+    };
     private static List<Patient> GeneratePatients(int count)
     {
         var patients = new List<Patient>();
@@ -46,11 +73,16 @@ public class PortfolioDbInitializer
         for (int i = 1; i <= count; i++)
         {
             var randomAge = new Random().Next(0, 60);
+            var first = FirstNames[new Random().Next(FirstNames.Length)];
+            var last = LastNames[new Random().Next(LastNames.Length)];
+            var email = $"{first.ToLower()}.{last.ToLower()}.{i}@mail.com";
+            var phone = $"+32 4{new Random().Next(10000000, 99999999)}";
+
             patients.Add(new Patient(
-                new Name($"PatientFirst{i}", $"PatientLast{i}"),
+                new Name(first, last),
                 DateOnly.FromDateTime(DateTime.Now.AddYears(-20 - randomAge)),
-                $"patient{i}@mail.com",
-                $"555-000{i:D3}",
+                email,
+                phone,
                 new Location($"Mortsel{i}", i, "Antwerp", "2640", "Belgium"),
                 Guid.NewGuid()
                 
@@ -65,9 +97,12 @@ public class PortfolioDbInitializer
         var specialisations = Enum.GetValues<Specialisation>();
         for (int i = 1; i <= count; i++)
         {
+            var first = FirstNames[new Random().Next(FirstNames.Length)];
+            var last = LastNames[new Random().Next(LastNames.Length)];
+            
             var randomSpec = (Specialisation)specialisations.GetValue(new Random().Next(specialisations.Length))!;
             doctors.Add(new Doctor(
-                new Name($"DoctorFirst{i}", $"DoctorLast{i}"),
+                new Name(first, last),
                 randomSpec,
                 new Location("Antwerpsestraat", 10, "Antwerp", "2000", "Belgium"),
                 Guid.NewGuid()
@@ -114,7 +149,7 @@ public class PortfolioDbInitializer
                     invoiceDate,
                     amount,
                     "Hospital Invoice",
-                    "Services rendered by the hospital.",
+                    "Services rendered by the Hospital.",
                     dueDate,
                     Guid.NewGuid(),
                     isPaid: rand.NextDouble() > 0.5

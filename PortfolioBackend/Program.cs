@@ -24,13 +24,13 @@ builder.Services.AddDbContext<PortfolioDbContext>( options =>
 
 // Add services to the container.
 //services
-//pathfinder
+//Pathfinder
 builder.Services.AddScoped<IPathManager, PathManager>();
 builder.Services.AddScoped<IPathfinding, AStarPathfinding>();
 builder.Services.AddScoped<IFloorplanAnalyzer, FloorplanAnalyzer>();
 builder.Services.AddScoped<IFloorplanRepository,FloorplanRepository>();
 builder.Services.AddScoped<IFloorplanManager,FloorplanManager>();
-//hospital
+//Hospital
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<IBaseManager<Patient, PatientDto, AddPatientDto>, PatientManager> ();
@@ -64,6 +64,16 @@ builder.Services
     });
 
 var app = builder.Build();
+
+
+//TODO later on 
+//Applying EF Core migrations (creating tables /indexexs defined via OnModelCreating in DbContext)
+/*using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<PortfolioDbContext>();
+    //apply migrations
+    dbContext.Database.Migrate();
+}*/
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

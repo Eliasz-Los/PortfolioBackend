@@ -39,21 +39,40 @@ public class PortfolioDbContext : DbContext
             .WithOne(p => p.Floorplan)
             .OnDelete(DeleteBehavior.Cascade);
         
-        // hospital
+        // Hospital
         
         modelBuilder.Entity<Patient>()
             .HasMany(patient => patient.Appointments)
             .WithOne(appointment => appointment.Patient)
             .HasForeignKey("PatientId");
-        modelBuilder.Entity<Patient>().OwnsOne(p => p.FullName);
+        modelBuilder.Entity<Patient>().OwnsOne(p => p.FullName, fn =>
+        {
+            fn.HasIndex("FirstName", "LastName"  )
+                .HasDatabaseName("ix_patient_fullname");
+        });
         modelBuilder.Entity<Patient>().OwnsOne(p => p.Location);
+        modelBuilder.Entity<Patient>(p =>
+        {
+           
+            p.HasIndex("DateOfBirth")
+                .HasDatabaseName("ix_patient_dateofbirth");
+        });
         
         modelBuilder.Entity<Doctor>()
             .HasMany(doctor => doctor.Appointments)
             .WithOne(appointment => appointment.Doctor)
             .HasForeignKey("DoctorId");
-        modelBuilder.Entity<Doctor>().OwnsOne(d => d.FullName);
+        modelBuilder.Entity<Doctor>().OwnsOne(d => d.FullName, fn =>
+        {
+            fn.HasIndex("FirstName", "LastName"  )
+                .HasDatabaseName("ix_doctor_fullname");
+        });
         modelBuilder.Entity<Doctor>().OwnsOne(d => d.WorkAddress);
+        modelBuilder.Entity<Doctor>(d =>
+        {
+            d.HasIndex("Specialisation")
+                .HasDatabaseName("ix_doctor_specialisation");
+        });
         
         modelBuilder.Entity<Appointment>().HasKey(a => a.Id);
         
@@ -61,11 +80,6 @@ public class PortfolioDbContext : DbContext
             .HasOne(i => i.Patient)
             .WithMany(p => p.Invoices)
             .HasForeignKey("PatientId");
-        //
-        // modelBuilder.Entity<Invoice>()
-        //     .HasOne(i => i.Appointment)
-        //     .WithOne(a => a.Invoice)
-        //     .HasForeignKey<Invoice>("AppointmentId");
 
     }
 }
