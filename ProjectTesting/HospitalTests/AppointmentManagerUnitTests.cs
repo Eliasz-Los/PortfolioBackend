@@ -2,6 +2,7 @@
 using AutoMapper;
 using BL.hospital;
 using BL.hospital.dto;
+using BL.hospital.invoice;
 using BL.hospital.validation;
 using DAL.Repository.hospital;
 using Domain.hospital;
@@ -49,6 +50,7 @@ public class AppointmentManagerUnitTests
         );
     }
     
+    //TODO fix this test
     [Fact]
     public async Task GetAppointmentsOfPatientById_ReturnsAppointments_WhenAppointmentsExist()
     {

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BL.hospital;
 using BL.hospital.dto;
+using BL.hospital.invoice;
 using DAL.Repository.hospital;
 using Domain.hospital;
 using Domain.hospital.types;

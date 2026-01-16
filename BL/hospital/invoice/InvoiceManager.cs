@@ -2,11 +2,9 @@
 using BL.hospital.dto;
 using DAL.Repository.hospital;
 using Domain.hospital;
-using QuestPDF.Companion;
 using QuestPDF.Fluent;
-using QuestPDF.Previewer;
 
-namespace BL.hospital;
+namespace BL.hospital.invoice;
 
 public class InvoiceManager : IInvoiceManager
 {

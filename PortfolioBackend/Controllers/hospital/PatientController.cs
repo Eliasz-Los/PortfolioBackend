@@ -1,5 +1,6 @@
 ﻿using BL.hospital;
 using BL.hospital.dto;
+using BL.hospital.invoice;
 using Domain.hospital;
 using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using Microsoft.AspNetCore.Mvc;

@@ -17,9 +17,6 @@ public class InvoiceRepository : IInvoiceRepository
     {
         return await _dbContext.Invoices
             .Include(i => i.Patient)
-            .ThenInclude(p => p.Location)
-            .Include(i => i.Patient)
-            .ThenInclude(p => p.FullName)
             .FirstOrDefaultAsync(i => i.Id == invoiceId);
     }
 
