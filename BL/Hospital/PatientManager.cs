@@ -9,17 +9,19 @@ using Domain.hospital;
 
 namespace BL.hospital;
 
-public class PatientManager : IBaseManager<Patient, PatientDto, AddPatientDto>  
+public class PatientManager : IBaseManager<Patient, PatientDto, AddPatientDto>, IPatientManager  
 {
     private readonly IMapper _mapper;
     private readonly IValidation<Patient> _validation;
     private readonly IBaseRepository<Patient> _repository;
+    private readonly IPatientRepository _patientRepository;
 
-    public PatientManager(IBaseRepository<Patient> repository, IMapper mapper, IValidation<Patient> validation)
+    public PatientManager(IBaseRepository<Patient> repository, IMapper mapper, IValidation<Patient> validation, IPatientRepository patientRepository)
     {
         _repository = repository;
         _mapper = mapper;
         _validation = validation;
+        _patientRepository = patientRepository;
     }
 
     public async Task<PatientDto?> GetById(Guid patientId)
@@ -56,5 +58,10 @@ public class PatientManager : IBaseManager<Patient, PatientDto, AddPatientDto>
     { 
         _repository.Delete(id);
     }
-    
+
+    public async Task<IEnumerable<PatientDto>> Search(string? term, CancellationToken cancellationToken = default)
+    {
+        var patients = await _patientRepository.SearchPatientsByFullNameOrDateOfBirth(term, cancellationToken);
+        return _mapper.Map<IEnumerable<PatientDto>>(patients);
+    }
 }
