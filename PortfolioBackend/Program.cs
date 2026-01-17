@@ -33,7 +33,9 @@ builder.Services.AddScoped<IFloorplanManager,FloorplanManager>();
 //Hospital
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 builder.Services.AddScoped<IBaseManager<Patient, PatientDto, AddPatientDto>, PatientManager> ();
+builder.Services.AddScoped<IPatientManager, PatientManager>();
 builder.Services.AddScoped<IBaseManager<Doctor, DoctorDto, AddDoctorDto>, DoctorManager> ();
 builder.Services.AddScoped<IBaseManager<Appointment, AppointmentDto, AddAppointmentDto>, AppointmentManager>();
 builder.Services.AddScoped<IAppointmentManager, AppointmentManager>();

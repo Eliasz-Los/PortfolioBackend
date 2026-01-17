@@ -29,7 +29,7 @@ public class PortfolioDbInitializer
         var doctors = GenerateDoctors(100);
         context.Doctors.AddRange(doctors);
 
-        var appointments = GenerateAppointments(500, patients, doctors);
+        var appointments = GenerateAppointments(5000, patients, doctors);
         context.Appointments.AddRange(appointments);
         
         var invoices = GenerateInvoicesForPatients(patients);
@@ -114,10 +114,12 @@ public class PortfolioDbInitializer
     private static List<Appointment> GenerateAppointments(int count, List<Patient> patients, List<Doctor> doctors)
     {
         var appointments = new List<Appointment>();
+        var rand = new Random();
+
         for (int i = 0; i < count; i++)
         {
-            Doctor doc = doctors[i % doctors.Count];
-            Patient patient = patients[i % doctors.Count];
+            Doctor doc = doctors[rand.Next(doctors.Count)];
+            Patient patient = patients[rand.Next(patients.Count)];
             appointments.Add(new Appointment(
                 Guid.NewGuid(),
                 patient.Id,

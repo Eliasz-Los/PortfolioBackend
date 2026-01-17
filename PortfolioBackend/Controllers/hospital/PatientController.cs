@@ -11,13 +11,15 @@ namespace PortfolioBackend.Controllers.hospital;
 [Route("api/Hospital/patients")]
 public class PatientController : ControllerBase
 {
-    private readonly IBaseManager<Patient, PatientDto, AddPatientDto> _patientManager;
+    private readonly IBaseManager<Patient, PatientDto, AddPatientDto> _baseManager;
     private readonly IInvoiceManager _invoiceManager;
+    private readonly IPatientManager _patientManager;
 
-    public PatientController(IBaseManager<Patient, PatientDto, AddPatientDto> patientManager, IInvoiceManager invoiceManager)
+    public PatientController(IBaseManager<Patient, PatientDto, AddPatientDto> baseManager, IInvoiceManager invoiceManager, IPatientManager patientManager)
     {
-        _patientManager = patientManager;
+        _baseManager = baseManager;
         _invoiceManager = invoiceManager;
+        _patientManager = patientManager;
     }
 
     [HttpGet("{id:guid}")]
@@ -73,6 +75,17 @@ public class PatientController : ControllerBase
         }
         
         return Ok(invoices);
+    }
+
+    [HttpGet("search")]
+    public async Task<IActionResult> SearchPatients([FromQuery] string? term, CancellationToken ct = default)
+    {
+        var result = await _patientManager.Search(term, ct);
+        if (!result.Any())
+        {
+            return NotFound();
+        }
+        return Ok(result);
     }
     
 }
