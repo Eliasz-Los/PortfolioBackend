@@ -15,17 +15,20 @@ public class DoctorManagerUnitTests
     private readonly DoctorManager _doctorManager;
     private readonly Mock<IMapper> _mapperMock;
     private readonly Mock<IValidation<Doctor>> _validationMock;
+    private readonly Mock<IDoctorRepository> _doctorRepo;
 
     public DoctorManagerUnitTests()
     {
         _repository = new Mock<IBaseRepository<Doctor>>();
         _mapperMock = new Mock<IMapper>();
         _validationMock = new Mock<IValidation<Doctor>>();
+        _doctorRepo = new Mock<IDoctorRepository>();
         
         _doctorManager = new DoctorManager(
             _repository.Object,
             _mapperMock.Object,
-            _validationMock.Object
+            _validationMock.Object,
+            _doctorRepo.Object
         );
     }
 

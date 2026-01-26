@@ -80,7 +80,7 @@ public class PatientController : ControllerBase
     [HttpGet("search")]
     public async Task<IActionResult> SearchPatients([FromQuery] string? term, CancellationToken ct = default)
     {
-        var result = await _patientManager.Search(term, ct);
+        var result = await _patientManager.SearchByFullNameOrDoB(term, ct);
         if (!result.Any())
         {
             return NotFound();

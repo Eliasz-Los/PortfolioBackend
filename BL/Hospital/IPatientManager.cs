@@ -5,6 +5,6 @@ namespace BL.hospital;
 
 public interface IPatientManager : IBaseManager<Patient, PatientDto, AddPatientDto>
 {
-    Task<IEnumerable<PatientDto>> Search(string? term, CancellationToken cancellationToken = default);
+    Task<IEnumerable<PatientDto>> SearchByFullNameOrDoB(string? term, CancellationToken cancellationToken = default);
 
 }

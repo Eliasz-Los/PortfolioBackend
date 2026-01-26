@@ -12,25 +12,25 @@ namespace ProjectTesting.HospitalTests;
 public class PatientManagerUnitTests
 {
  
-    private readonly Mock<IBaseRepository<Patient>> _patientRepositoryMock;
+    private readonly Mock<IBaseRepository<Patient>> _basePatientRepo;
     private readonly Mock<IMapper> _mapperMock;
     private readonly Mock<IValidation<Patient>> _validationMock;
-    private readonly Mock<IPatientRepository> _patientRepositoryMock2;
+    private readonly Mock<IPatientRepository> _patientRepo;
 
     private readonly PatientManager _patientManager;
 
     public PatientManagerUnitTests()
     {
-        _patientRepositoryMock = new Mock<IBaseRepository<Patient>>();
+        _basePatientRepo = new Mock<IBaseRepository<Patient>>();
         _mapperMock = new Mock<IMapper>();
         _validationMock = new Mock<IValidation<Patient>>();
-        _patientRepositoryMock2 = new Mock<IPatientRepository>();
+        _patientRepo = new Mock<IPatientRepository>();
 
         _patientManager = new PatientManager(
-            _patientRepositoryMock.Object,
+            _basePatientRepo.Object,
             _mapperMock.Object,
             _validationMock.Object,
-            _patientRepositoryMock2.Object
+            _patientRepo.Object
         );
     }
 
@@ -59,7 +59,7 @@ public class PatientManagerUnitTests
             Location = new Location("Mortselhaar", 154, "Antwerp", "2640", "Belgium")
         };
 
-        _patientRepositoryMock
+        _basePatientRepo
             .Setup(r => r.ReadById(patientId))
             .ReturnsAsync(patient);
 
@@ -122,7 +122,7 @@ public class PatientManagerUnitTests
             }
         };
 
-        _patientRepositoryMock
+        _basePatientRepo
             .Setup(r => r.ReadAll())
             .ReturnsAsync(patients);
 
@@ -169,7 +169,7 @@ public class PatientManagerUnitTests
             .Setup(v => v.Validate(patient))
             .Returns(Enumerable.Empty<System.ComponentModel.DataAnnotations.ValidationResult>());
 
-        _patientRepositoryMock
+        _basePatientRepo
             .Setup(r => r.Create(patient))
             .ReturnsAsync(patient);
 
@@ -182,7 +182,7 @@ public class PatientManagerUnitTests
 
         _mapperMock.Verify(m => m.Map<Patient>(addDto), Times.Once);
         _validationMock.Verify(v => v.Validate(patient), Times.Once);
-        _patientRepositoryMock.Verify(r => r.Create(patient), Times.Once);
+        _basePatientRepo.Verify(r => r.Create(patient), Times.Once);
     }
 
     
@@ -192,104 +192,69 @@ public class PatientManagerUnitTests
         // Arrange
         var patientId = Guid.NewGuid();
 
-        _patientRepositoryMock
+        _basePatientRepo
             .Setup(r => r.Delete(patientId));
 
         // Act
          _patientManager.Remove(patientId);
 
         // Assert
-        _patientRepositoryMock.Verify(r => r.Delete(patientId), Times.Once);
+        _basePatientRepo.Verify(r => r.Delete(patientId), Times.Once);
     }
     
      
-         [Theory]
-         [InlineData("")]
-         [InlineData("   ")]
-         public async Task Search_WhenTermIsEmptyOrWhitespace_CallsRepoWithSameTerm_AndReturnsMappedDtos(string term)
-         {
-             var ct = CancellationToken.None;
+     [Theory]
+     [InlineData("")]
+     [InlineData("   ")]
+     public async Task Search_WhenTermIsEmptyOrWhitespace_CallsRepoWithSameTerm_AndReturnsMappedDtos(string term)
+     {
+         var ct = CancellationToken.None;
+ 
+         var patients = new List<Patient> { new(), new() };
+         var dtos = new List<PatientDto> { new(), new() };
+ 
+         _patientRepo
+             .Setup(r => r.SearchPatientsByFullNameOrDateOfBirth(term, ct))
+             .ReturnsAsync(patients);
+ 
+         _mapperMock
+             .Setup(m => m.Map<IEnumerable<PatientDto>>(patients))
+             .Returns(dtos);
+ 
+ 
+         var result = await _patientManager.SearchByFullNameOrDoB(term, ct);
+ 
+         Assert.Same(dtos, result);
+         _patientRepo.Verify(r => r.SearchPatientsByFullNameOrDateOfBirth(term, ct), Times.Once);
+         _mapperMock.Verify(m => m.Map<IEnumerable<PatientDto>>(patients), Times.Once);
+         _basePatientRepo.VerifyNoOtherCalls();
+     }
      
-             var patients = new List<Patient> { new(), new() };
-             var dtos = new List<PatientDto> { new(), new() };
+     [Fact]
+     public async Task Search_WhenTermIsName_CallsRepo_AndReturnsMappedDtos()
+     {
+         var ct = CancellationToken.None;
+         var term = "john";
+
+         var patients = new List<Patient> { new() };
+         var dtos = new List<PatientDto> { new() };
+
+         _patientRepo
+             .Setup(r => r.SearchPatientsByFullNameOrDateOfBirth(term, ct))
+             .ReturnsAsync(patients);
+
+         _mapperMock
+             .Setup(m => m.Map<IEnumerable<PatientDto>>(patients))
+             .Returns(dtos);
+         var result = await _patientManager.SearchByFullNameOrDoB(term, ct);
+
+         Assert.Same(dtos, result);
+         _patientRepo.Verify(r => r.SearchPatientsByFullNameOrDateOfBirth(term, ct), Times.Once);
+         _mapperMock.Verify(m => m.Map<IEnumerable<PatientDto>>(patients), Times.Once);
+         _basePatientRepo.VerifyNoOtherCalls();
+         _patientRepo.VerifyNoOtherCalls();
+     }
      
-             _patientRepositoryMock2
-                 .Setup(r => r.SearchPatientsByFullNameOrDateOfBirth(term, ct))
-                 .ReturnsAsync(patients);
-     
-             _mapperMock
-                 .Setup(m => m.Map<IEnumerable<PatientDto>>(patients))
-                 .Returns(dtos);
-     
-     
-             var result = await _patientManager.Search(term, ct);
-     
-             Assert.Same(dtos, result);
-             _patientRepositoryMock2.Verify(r => r.SearchPatientsByFullNameOrDateOfBirth(term, ct), Times.Once);
-             _mapperMock.Verify(m => m.Map<IEnumerable<PatientDto>>(patients), Times.Once);
-             _patientRepositoryMock.VerifyNoOtherCalls();
-         }
-     
-         /*
-         [Fact]
-         public async Task Search_WhenTermIsName_CallsRepo_AndReturnsMappedDtos()
-         {
-             var ct = CancellationToken.None;
-             var term = "john";
-     
-             var patients = new List<Patient> { new() };
-             var dtos = new List<PatientDto> { new() };
-     
-             _patientRepo
-                 .Setup(r => r.SearchPatientsByFullNameOrDateOfBirth(term, ct))
-                 .ReturnsAsync(patients);
-     
-             _mapper
-                 .Setup(m => m.Map<IEnumerable<PatientDto>>(patients))
-                 .Returns(dtos);
-     
-             var sut = CreateSut();
-     
-             var result = await sut.Search(term, ct);
-     
-             Assert.Same(dtos, result);
-             _patientRepo.Verify(r => r.SearchPatientsByFullNameOrDateOfBirth(term, ct), Times.Once);
-             _mapper.Verify(m => m.Map<IEnumerable<PatientDto>>(patients), Times.Once);
-             _baseRepo.VerifyNoOtherCalls();
-             _patientRepo.VerifyNoOtherCalls();
-             _mapper.VerifyNoOtherCalls();
-             _validation.VerifyNoOtherCalls();
-         }*/
-     
-         /*[Fact]
-         public async Task Search_WhenTermIsDateOnly_CallsRepo_AndReturnsMappedDtos()
-         {
-             var ct = CancellationToken.None;
-             var term = "2000-01-02";
-     
-             var patients = new List<Patient> { new(), new() };
-             var dtos = new List<PatientDto> { new(), new() };
-     
-             _patientRepo
-                 .Setup(r => r.SearchPatientsByFullNameOrDateOfBirth(term, ct))
-                 .ReturnsAsync(patients);
-     
-             _mapper
-                 .Setup(m => m.Map<IEnumerable<PatientDto>>(patients))
-                 .Returns(dtos);
-     
-             var sut = CreateSut();
-     
-             var result = await sut.Search(term, ct);
-     
-             Assert.Same(dtos, result);
-             _patientRepo.Verify(r => r.SearchPatientsByFullNameOrDateOfBirth(term, ct), Times.Once);
-             _mapper.Verify(m => m.Map<IEnumerable<PatientDto>>(patients), Times.Once);
-             _baseRepo.VerifyNoOtherCalls();
-             _patientRepo.VerifyNoOtherCalls();
-             _mapper.VerifyNoOtherCalls();
-             _validation.VerifyNoOtherCalls();
-         }*/
 
     
     

@@ -21,6 +21,9 @@
     &lt;TestId&gt;xUnit::1EB9B43B-6305-419D-921C-C99F663746AC::net9.0::ProjectTesting.HospitalTests.AppointmentManagerUnitTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=c9f77625_002D0b90_002D41c5_002D85df_002D2113f289daad/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Search_WhenTermIsName_CallsRepo_AndReturnsMappedDtos" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;ProjectFolder&gt;1EB9B43B-6305-419D-921C-C99F663746AC/d:HospitalTests&lt;/ProjectFolder&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f05627de_002D8ade_002D40cd_002D9e42_002D60c41360e54a/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="InvoiceManagerUnitTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Project Location="C:\Users\peril\Documents\OsobneRzeczy\CSharp_dotnet\Portfolio\PortfolioBackend\ProjectTesting" Presentation="&amp;lt;ProjectTesting&amp;gt;" /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>

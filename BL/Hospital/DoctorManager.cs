@@ -7,17 +7,19 @@ using Domain.hospital;
 
 namespace BL.hospital;
 
-public class DoctorManager : IBaseManager<Doctor, DoctorDto, AddDoctorDto> 
+public class DoctorManager : IDoctorManager
 {
     private readonly IMapper _mapper;
     private readonly IValidation<Doctor> _validation;
     private readonly IBaseRepository<Doctor> _repository;
+    private readonly IDoctorRepository _doctorRepository;
     
-    public DoctorManager(IBaseRepository<Doctor> repository, IMapper mapper, IValidation<Doctor> validation)
+    public DoctorManager(IBaseRepository<Doctor> repository, IMapper mapper, IValidation<Doctor> validation, IDoctorRepository doctorRepository)
     {
         _repository = repository;
         _mapper = mapper;
         _validation = validation;
+        _doctorRepository = doctorRepository;
     }
 
     public async Task<DoctorDto?> GetById(Guid id)
@@ -65,5 +67,11 @@ public class DoctorManager : IBaseManager<Doctor, DoctorDto, AddDoctorDto>
     public void Remove(Guid id)
     {
         _repository.Delete(id);
+    }
+
+    public async Task<IEnumerable<DoctorDto>> SearchByFullNameOrSpecialisation(string? term, CancellationToken cancellationToken = default)
+    {
+        var doctors = await _doctorRepository.SearchDoctorsByFullNameOrSpecialisation(term, cancellationToken);
+        return _mapper.Map<IEnumerable<DoctorDto>>(doctors);
     }
 }

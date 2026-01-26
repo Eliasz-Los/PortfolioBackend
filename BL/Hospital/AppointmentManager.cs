@@ -102,7 +102,6 @@ public class AppointmentManager : IBaseManager<Appointment, AppointmentDto, AddA
         await _invoiceManager.Add(invoice);
     }
 
-    // Perhaps split this method into more reusable parts in the future
     public async Task<IEnumerable<DoctorAvailabilityDto>> GetDoctorAvailability(
         Guid doctorId,
         DateOnly from,
