@@ -59,7 +59,7 @@ public class PatientManager : IBaseManager<Patient, PatientDto, AddPatientDto>, 
         _repository.Delete(id);
     }
 
-    public async Task<IEnumerable<PatientDto>> Search(string? term, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<PatientDto>> SearchByFullNameOrDoB(string? term, CancellationToken cancellationToken = default)
     {
         var patients = await _patientRepository.SearchPatientsByFullNameOrDateOfBirth(term, cancellationToken);
         return _mapper.Map<IEnumerable<PatientDto>>(patients);

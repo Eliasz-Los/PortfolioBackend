@@ -29,7 +29,7 @@ public class InvoiceRepository : IInvoiceRepository
     {
        
         _dbContext.Invoices.Add(invoice);
-        _dbContext.SaveChanges();
-        return await Task.FromResult(invoice);
+        await _dbContext.SaveChangesAsync();
+        return invoice;
     }
 }

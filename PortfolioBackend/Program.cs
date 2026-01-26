@@ -34,9 +34,11 @@ builder.Services.AddScoped<IFloorplanManager,FloorplanManager>();
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
 builder.Services.AddScoped<IBaseManager<Patient, PatientDto, AddPatientDto>, PatientManager> ();
 builder.Services.AddScoped<IPatientManager, PatientManager>();
 builder.Services.AddScoped<IBaseManager<Doctor, DoctorDto, AddDoctorDto>, DoctorManager> ();
+builder.Services.AddScoped<IDoctorManager, DoctorManager>();
 builder.Services.AddScoped<IBaseManager<Appointment, AppointmentDto, AddAppointmentDto>, AppointmentManager>();
 builder.Services.AddScoped<IAppointmentManager, AppointmentManager>();
 builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
@@ -45,9 +47,9 @@ builder.Services.AddScoped<IValidation<Patient>, Validation<Patient>>();
 builder.Services.AddScoped<IValidation<Doctor>, Validation<Doctor>>();
 builder.Services.AddScoped<IValidation<Appointment>, Validation<Appointment>>();
 
-
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
+
 //mappers
 builder.Services.AddAutoMapper(typeof(PointMappingProfile));
 builder.Services.AddAutoMapper(typeof(PatientMappingProfile));

@@ -1,30 +1,30 @@
 ﻿using DAL.EntityFramework;
 using Domain.hospital;
+using Domain.hospital.types;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repository.hospital;
 
-public class PatientRepository : BaseRepository<Patient>, IPatientRepository
+public class DoctorRepository : BaseRepository<Doctor>, IDoctorRepository
 {
-    public PatientRepository(PortfolioDbContext context) : base(context)
+    public DoctorRepository(PortfolioDbContext context) : base(context)
     {
     }
-    
-    public async Task<IEnumerable<Patient>> SearchPatientsByFullNameOrDateOfBirth(
-        string? term,
-        CancellationToken cancellationToken = default)
-    {
-        IQueryable<Patient> query = _dbSet.AsNoTracking();
 
+    public async Task<IEnumerable<Doctor>> SearchDoctorsByFullNameOrSpecialisation(string? term, CancellationToken cancellationToken)
+    {
+
+        IQueryable<Doctor> query = _dbSet.AsNoTracking();
+        
         term = term?.Trim().ToLower();
         if (string.IsNullOrWhiteSpace(term))
         {
             return await query.ToListAsync(cancellationToken);
         }
-        
-        if (DateOnly.TryParse(term, out var dateOfBirth))
+
+        if (Enum.TryParse(term , true, out Specialisation spec))
         {
-            query = query.Where(p => p.DateOfBirth == dateOfBirth);
+            query = query.Where(s => s.Specialisation == spec);
             return await query.ToListAsync(cancellationToken);
         }
         
@@ -35,5 +35,6 @@ public class PatientRepository : BaseRepository<Patient>, IPatientRepository
                 d.FullName.FirstName.ToLower().Contains(term) ||
                 d.FullName.LastName.ToLower().Contains(term))
             .ToListAsync(cancellationToken);
+
     }
 }
