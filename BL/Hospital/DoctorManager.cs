@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using BL.hospital.Caching;
 using BL.hospital.dto;
 using BL.hospital.validation;
 using DAL.Repository.hospital;
@@ -13,13 +14,15 @@ public class DoctorManager : IDoctorManager
     private readonly IValidation<Doctor> _validation;
     private readonly IBaseRepository<Doctor> _repository;
     private readonly IDoctorRepository _doctorRepository;
+    private readonly IDoctorSearchCache _doctorSearchCache;
     
-    public DoctorManager(IBaseRepository<Doctor> repository, IMapper mapper, IValidation<Doctor> validation, IDoctorRepository doctorRepository)
+    public DoctorManager(IBaseRepository<Doctor> repository, IMapper mapper, IValidation<Doctor> validation, IDoctorRepository doctorRepository, BL.hospital.Caching.IDoctorSearchCache doctorSearchCache)
     {
         _repository = repository;
         _mapper = mapper;
         _validation = validation;
         _doctorRepository = doctorRepository;
+        _doctorSearchCache = doctorSearchCache;
     }
 
     public async Task<DoctorDto?> GetById(Guid id)
@@ -71,7 +74,22 @@ public class DoctorManager : IDoctorManager
 
     public async Task<IEnumerable<DoctorDto>> SearchByFullNameOrSpecialisation(string? term, CancellationToken cancellationToken = default)
     {
+        // Cache only for non-empty terms.
+        var cached = await _doctorSearchCache.TryGet(term, cancellationToken);
+        if (cached is not null)
+        {
+            return cached;
+        }
+
         var doctors = await _doctorRepository.SearchDoctorsByFullNameOrSpecialisation(term, cancellationToken);
-        return _mapper.Map<IEnumerable<DoctorDto>>(doctors);
+        var mapped = _mapper.Map<IReadOnlyList<DoctorDto>>(doctors);
+
+        // Keep it short to avoid stale suggestions.
+        if (!string.IsNullOrWhiteSpace(term))
+        {
+            await _doctorSearchCache.Set(term, mapped, ttl: TimeSpan.FromMinutes(2), cancellationToken);
+        }
+
+        return mapped;
     }
 }

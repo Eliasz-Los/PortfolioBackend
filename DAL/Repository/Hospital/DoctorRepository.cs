@@ -15,7 +15,7 @@ public class DoctorRepository : BaseRepository<Doctor>, IDoctorRepository
     {
 
         IQueryable<Doctor> query = _dbSet.AsNoTracking();
-        
+
         term = term?.Trim().ToLower();
         if (string.IsNullOrWhiteSpace(term))
         {
@@ -27,7 +27,7 @@ public class DoctorRepository : BaseRepository<Doctor>, IDoctorRepository
             query = query.Where(s => s.Specialisation == spec);
             return await query.ToListAsync(cancellationToken);
         }
-        
+
         return await query
             .Where(d =>
                 ((d.FullName.FirstName + " " + d.FullName.LastName).ToLower().Contains(term)) ||
