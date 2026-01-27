@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using BL.generalDto;
+using BL.hospital.Caching;
 using BL.hospital.dto;
 using BL.hospital.mapper;
 using BL.hospital.validation;
@@ -15,13 +16,15 @@ public class PatientManager : IBaseManager<Patient, PatientDto, AddPatientDto>, 
     private readonly IValidation<Patient> _validation;
     private readonly IBaseRepository<Patient> _repository;
     private readonly IPatientRepository _patientRepository;
+    private readonly IPatientSearchCache _patientSearchCache;
 
-    public PatientManager(IBaseRepository<Patient> repository, IMapper mapper, IValidation<Patient> validation, IPatientRepository patientRepository)
+    public PatientManager(IBaseRepository<Patient> repository, IMapper mapper, IValidation<Patient> validation, IPatientRepository patientRepository, IPatientSearchCache patientSearchCache)
     {
         _repository = repository;
         _mapper = mapper;
         _validation = validation;
         _patientRepository = patientRepository;
+        _patientSearchCache = patientSearchCache;
     }
 
     public async Task<PatientDto?> GetById(Guid patientId)
@@ -61,7 +64,18 @@ public class PatientManager : IBaseManager<Patient, PatientDto, AddPatientDto>, 
 
     public async Task<IEnumerable<PatientDto>> SearchByFullNameOrDoB(string? term, CancellationToken cancellationToken = default)
     {
+        var cached = await _patientSearchCache.TryGet(term, cancellationToken);
+        if (cached != null)
+        {
+            return cached;
+        }
         var patients = await _patientRepository.SearchPatientsByFullNameOrDateOfBirth(term, cancellationToken);
-        return _mapper.Map<IEnumerable<PatientDto>>(patients);
+        var mapped = _mapper.Map<IReadOnlyList<PatientDto>>(patients);
+
+        if (!string.IsNullOrWhiteSpace(term))
+        {
+            await _patientSearchCache.Set(term, mapped, ttl: TimeSpan.FromMinutes(5), cancellationToken);
+        }
+        return mapped;
     }
 }

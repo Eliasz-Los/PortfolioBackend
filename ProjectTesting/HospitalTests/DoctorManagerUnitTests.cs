@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BL.hospital;
+using BL.hospital.Caching;
 using BL.hospital.dto;
 using BL.hospital.validation;
 using DAL.Repository.hospital;
@@ -16,6 +17,7 @@ public class DoctorManagerUnitTests
     private readonly Mock<IMapper> _mapperMock;
     private readonly Mock<IValidation<Doctor>> _validationMock;
     private readonly Mock<IDoctorRepository> _doctorRepo;
+    private readonly Mock<IDoctorSearchCache> _doctorSearchCacheMock;
 
     public DoctorManagerUnitTests()
     {
@@ -23,12 +25,13 @@ public class DoctorManagerUnitTests
         _mapperMock = new Mock<IMapper>();
         _validationMock = new Mock<IValidation<Doctor>>();
         _doctorRepo = new Mock<IDoctorRepository>();
-        
+        _doctorSearchCacheMock = new Mock<IDoctorSearchCache>();
         _doctorManager = new DoctorManager(
             _repository.Object,
             _mapperMock.Object,
             _validationMock.Object,
-            _doctorRepo.Object
+            _doctorRepo.Object,
+            _doctorSearchCacheMock.Object
         );
     }
 

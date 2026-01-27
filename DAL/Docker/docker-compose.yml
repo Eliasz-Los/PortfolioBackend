@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   postgres:
     image: postgres:latest
@@ -11,6 +9,13 @@ services:
       - "54326:5432"
     volumes:
       - ./portfolio_db/postgres/data:/var/lib/postgresql/data
+    networks:
+      - postgres_network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
     networks:
       - postgres_network
 

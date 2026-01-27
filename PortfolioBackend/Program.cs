@@ -1,6 +1,7 @@
 using System.Drawing;
 using System.Text.Json.Serialization;
 using BL.hospital;
+using BL.hospital.Caching;
 using BL.hospital.dto;
 using BL.hospital.invoice;
 using BL.hospital.mapper;
@@ -22,6 +23,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<PortfolioDbContext>( options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("portfolio_db")));
 
+// Redis cache (optional in dev; requires Redis running)
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("redis");
+    options.InstanceName = "PortfolioBackend:";
+});
+
 // Add services to the container.
 //services
 //Pathfinder
@@ -35,6 +43,10 @@ builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
+//Redis
+builder.Services.AddScoped<IDoctorSearchCache, DoctorSearchCache>();
+builder.Services.AddScoped<IPatientSearchCache, PatientSearchCache>();
+
 builder.Services.AddScoped<IBaseManager<Patient, PatientDto, AddPatientDto>, PatientManager> ();
 builder.Services.AddScoped<IPatientManager, PatientManager>();
 builder.Services.AddScoped<IBaseManager<Doctor, DoctorDto, AddDoctorDto>, DoctorManager> ();
