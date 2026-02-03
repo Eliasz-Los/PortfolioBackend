@@ -49,3 +49,6 @@ nunit-*.xml
 
 # Rider
 .idea/
+
+# Launch Settings
+/PortfolioBackend/Properties/launchSettings.json

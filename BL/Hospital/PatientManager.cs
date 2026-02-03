@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using AutoMapper;
-using BL.generalDto;
 using BL.hospital.Caching;
 using BL.hospital.dto;
 using BL.hospital.mapper;

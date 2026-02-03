@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using BL.generalDto;
 using Domain.hospital.types;
 
 namespace BL.hospital.dto;
 
-public class AddPatientDto : AddDto, IValidatableObject
+public class AddPatientDto : IValidatableObject
 {
     public Name FullName { get; set; }
     public DateOnly DateOfBirth { get; set; }
