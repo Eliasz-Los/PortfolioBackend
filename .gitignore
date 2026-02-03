@@ -51,4 +51,4 @@ nunit-*.xml
 .idea/
 
 # Launch Settings
-/PortfolioBackend/Properties/launchSettings.json
+#/PortfolioBackend/Properties/launchSettings.json

@@ -7,8 +7,7 @@
       "launchBrowser": false,
       "applicationUrl": "http://localhost:5266",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "Finnhub__ApiKey": "d5vng4hr01qihi8n2u60d5vng4hr01qihi8n2u6g"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "https": {
