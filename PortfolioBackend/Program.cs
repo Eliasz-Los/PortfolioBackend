@@ -1,4 +1,3 @@
-using System.Drawing;
 using System.Text.Json.Serialization;
 using BL.hospital;
 using BL.hospital.Caching;
@@ -7,6 +6,9 @@ using BL.hospital.invoice;
 using BL.hospital.mapper;
 using BL.hospital.validation;
 using BL.pathfinder;
+using BL.Pathfinder;
+using BL.Pathfinder.algorithm;
+using BL.Pathfinder.analyzer;
 using BL.pathfinder.mapper;
 using DAL.EntityFramework;
 using DAL.Repository;
@@ -19,7 +21,7 @@ using QuestPDF.Infrastructure;
 QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
-    
+
 builder.Services.AddDbContext<PortfolioDbContext>( options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("portfolio_db")));
 
@@ -30,20 +32,24 @@ builder.Services.AddStackExchangeRedisCache(options =>
     options.InstanceName = "PortfolioBackend:";
 });
 
-// Add services to the container.
+
 //services
 //Pathfinder
-builder.Services.AddScoped<IPathManager, PathManager>();
+// builder.Services.AddScoped<IPathManager, PathManager>();
 builder.Services.AddScoped<IPathfinding, AStarPathfinding>();
 builder.Services.AddScoped<IFloorplanAnalyzer, FloorplanAnalyzer>();
 builder.Services.AddScoped<IFloorplanRepository,FloorplanRepository>();
 builder.Services.AddScoped<IFloorplanManager,FloorplanManager>();
+builder.Services.AddScoped<ISecondAnalyzer, SecondFpAnalyzer>();
+builder.Services.AddScoped<ISecondAStar, AStarGridPathfinding>();
+builder.Services.AddScoped<IPathManager, SecondPathManager>();
+
 //Hospital
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
-//Redis
+//Hospital - Redis
 builder.Services.AddScoped<IDoctorSearchCache, DoctorSearchCache>();
 builder.Services.AddScoped<IPatientSearchCache, PatientSearchCache>();
 
@@ -59,16 +65,9 @@ builder.Services.AddScoped<IValidation<Patient>, Validation<Patient>>();
 builder.Services.AddScoped<IValidation<Doctor>, Validation<Doctor>>();
 builder.Services.AddScoped<IValidation<Appointment>, Validation<Appointment>>();
 
+
+
 builder.Services.AddOpenApi();
-builder.Services.AddControllers();
-
-//mappers
-builder.Services.AddAutoMapper(typeof(PointMappingProfile));
-builder.Services.AddAutoMapper(typeof(PatientMappingProfile));
-builder.Services.AddAutoMapper(typeof(AppointmentMappingProfile));
-builder.Services.AddAutoMapper(typeof(DoctorMappingProfile));
-builder.Services.AddAutoMapper(typeof(InvoiceMappingProfile));
-
 //So that the dotnet enum string support works
 builder.Services
     .AddControllers()
@@ -78,6 +77,14 @@ builder.Services
             new JsonStringEnumConverter()
         );
     });
+
+//mappers
+builder.Services.AddAutoMapper(typeof(PointMappingProfile));
+builder.Services.AddAutoMapper(typeof(PatientMappingProfile));
+builder.Services.AddAutoMapper(typeof(AppointmentMappingProfile));
+builder.Services.AddAutoMapper(typeof(DoctorMappingProfile));
+builder.Services.AddAutoMapper(typeof(InvoiceMappingProfile));
+
 
 var app = builder.Build();
 
@@ -95,6 +102,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+
 }
 
 app.UseCors(policy => policy.WithOrigins("http://localhost:4200")

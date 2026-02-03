@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using BL.generalDto;
 using Domain.hospital;
 using Domain.hospital.types;
 

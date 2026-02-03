@@ -3,18 +3,18 @@
 public class Point
 {
     public Guid Id {get; set;}
-    public double XWidth {get; set;}
-    public double YHeight {get; set;}
+    public int XWidth {get; set;}
+    public int YHeight {get; set;}
     public Floorplan Floorplan {get; set;}
     
     public Point(){}
-    public Point(double xWidth, double yHeight)
+    public Point(int xWidth, int yHeight)
     {
         XWidth = xWidth;
         YHeight = yHeight;
     }
 
-    public Point(double xWidth, double yHeight, Floorplan floorplan)
+    public Point(int xWidth, int yHeight, Floorplan floorplan)
     {
         XWidth = xWidth;
         YHeight = yHeight;

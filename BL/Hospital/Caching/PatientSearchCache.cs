@@ -38,7 +38,8 @@ public class PatientSearchCache : IPatientSearchCache
     var payload = JsonSerializer.Serialize(patients, jsonOptions);
     var options = new DistributedCacheEntryOptions
     {      
-      AbsoluteExpirationRelativeToNow = ttl
+      // AbsoluteExpirationRelativeToNow = ttl
+      SlidingExpiration = ttl
     };
     await _cache.SetStringAsync(key, payload, options, ct);
   }

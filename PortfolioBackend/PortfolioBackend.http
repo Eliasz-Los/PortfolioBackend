@@ -26,3 +26,12 @@ Content-Type: application/json
 
 GET {{PortfolioBackend_HostAddress}}/api/hospital/patients
 Accept: application/json
+
+
+############# Market api calls
+GET {{PortfolioBackend_HostAddress}}/api/MarketData/quotes/AMZN
+Accept: application/json
+
+####
+GET {{PortfolioBackend_HostAddress}}/api/MarketData/quotes/BINANCE:BTCUSDT
+Accept: application/json
