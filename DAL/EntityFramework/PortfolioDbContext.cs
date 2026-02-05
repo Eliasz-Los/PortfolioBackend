@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Domain;
+using Domain.DocuGroup;
 using Domain.hospital;
 using Domain.hospital.types;
 using Domain.pathfinder;
@@ -17,6 +18,11 @@ public class PortfolioDbContext : DbContext
     public DbSet<Doctor> Doctors { get; set; }
     public DbSet<Patient> Patients { get; set; }
     public DbSet<Invoice> Invoices { get; set; }
+    
+    public DbSet<GroupDocument> GroupDocuments { get; set; }
+    public DbSet<Membership> Memberships { get; set; }
+    public DbSet<DocumentComponent> Components { get; set; }
+    public DbSet<PublishEvent> PublishEvents { get; set; }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -80,6 +86,30 @@ public class PortfolioDbContext : DbContext
             .HasOne(i => i.Patient)
             .WithMany(p => p.Invoices)
             .HasForeignKey("PatientId");
+
+        // DocuGroup
+        modelBuilder.Entity<GroupDocument>(doc =>
+        {
+            doc.HasMany(d => d.Components)
+                .WithOne(c => c.GroupDocument)
+                .HasForeignKey(c => c.GroupDocumentId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            doc.HasMany(d => d.Memberships)
+                .WithOne(m => m.GroupDocument)
+                .HasForeignKey(m => m.GroupDocumentId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            doc.HasMany( d=> d.Events)
+                .WithOne(e => e.GroupDocument)
+                .HasForeignKey(e => e.GroupDocumentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+        });
+
+        modelBuilder.Entity<DocumentComponent>()
+            .HasIndex(c => new { c.GroupDocumentId, c.Order })
+            .IsUnique(false);
 
     }
 }

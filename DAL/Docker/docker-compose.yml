@@ -9,6 +9,7 @@ services:
       - "54326:5432"
     volumes:
       - ./portfolio_db/postgres/data:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d
     networks:
       - postgres_network
 
@@ -16,6 +17,30 @@ services:
     image: redis:7-alpine
     ports:
       - "6379:6379"
+    networks:
+      - postgres_network
+
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.5.0
+    depends_on:
+      - postgres
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+
+      KC_DB: postgres
+      KC_DB_URL_HOST: postgres
+      KC_DB_URL_PORT: "5432"
+      KC_DB_URL_DATABASE: portfolio_db
+      KC_DB_USERNAME: user
+      KC_DB_PASSWORD: postgres
+
+      KC_HOSTNAME_STRICT: "false"
+      KC_HTTP_ENABLED: "true"
+    command: start-dev
+    ports:
+      - "8080:8080"
     networks:
       - postgres_network
 
