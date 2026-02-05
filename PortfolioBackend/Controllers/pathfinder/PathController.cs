@@ -1,6 +1,7 @@
 ﻿using BL.pathfinder;
 using BL.pathfinder.dto;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace PortfolioBackend.Controllers.pathfinder;
 
@@ -18,6 +19,7 @@ public class PathController : ControllerBase
     }
 
     [HttpPost("route")]
+    [EnableRateLimiting("pathfinding")]
     public async Task<IActionResult> FindPath(PathRequestDto pathRequestDto)
     {
         string folderPath = Path.Combine(_webHostEnvironment.ContentRootPath, "floor_images");

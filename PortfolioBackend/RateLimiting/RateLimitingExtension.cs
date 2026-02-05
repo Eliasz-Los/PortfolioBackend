@@ -36,7 +36,6 @@ public static class RateLimitingExtension
                         PermitLimit = 120,
                         Window = TimeSpan.FromMinutes(1),
                         QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                        QueueLimit = 0,
                         AutoReplenishment = true
                     });
             });
@@ -48,10 +47,9 @@ public static class RateLimitingExtension
                     partitionKey: key,
                     factory: static _ => new FixedWindowRateLimiterOptions
                     {
-                        PermitLimit = 1,
+                        PermitLimit = 10,
                         Window = TimeSpan.FromMinutes(1),
                         QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                        QueueLimit = 0,
                         AutoReplenishment = true
                     });
             });

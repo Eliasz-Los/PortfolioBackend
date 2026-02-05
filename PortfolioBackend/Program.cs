@@ -15,6 +15,7 @@ using DAL.Repository;
 using DAL.Repository.hospital;
 using Domain.hospital;
 using Microsoft.EntityFrameworkCore;
+using PortfolioBackend.RateLimiting;
 using QuestPDF.Infrastructure;
 
 //License for QuestPDF for nowfree unless 1m revenue is reached
@@ -66,7 +67,6 @@ builder.Services.AddScoped<IValidation<Doctor>, Validation<Doctor>>();
 builder.Services.AddScoped<IValidation<Appointment>, Validation<Appointment>>();
 
 
-
 builder.Services.AddOpenApi();
 //So that the dotnet enum string support works
 builder.Services
@@ -77,6 +77,7 @@ builder.Services
             new JsonStringEnumConverter()
         );
     });
+builder.Services.AddAppRateLimiting();
 
 //mappers
 builder.Services.AddAutoMapper(typeof(PointMappingProfile));
@@ -111,7 +112,12 @@ app.UseCors(policy => policy.WithOrigins("http://localhost:4200")
 );
 
 app.UseHttpsRedirection();
+app.UseRateLimiter();
 
-app.MapControllers();
+app.MapControllers()
+    .RequireRateLimiting(RateLimitingExtension.GlobalPolicy);
+
+app.MapControllerRoute(name: "pathfinding", pattern:"api/path")
+    .RequireRateLimiting(RateLimitingExtension.PathfindingPolicy);
 
 app.Run();
