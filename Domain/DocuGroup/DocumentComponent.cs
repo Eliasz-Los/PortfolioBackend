@@ -13,9 +13,8 @@ public class DocumentComponent
     public Guid GroupDocumentId { get; set; }
     public GroupDocument GroupDocument { get; set; }
     
-    public DocumentComponent(ComponentType componentType)
+    public DocumentComponent()
     {
-        ComponentType = componentType;
     }
 
     public DocumentComponent(Guid id, int order, string? lastPublishedContentJson, Guid groupDocumentId, ComponentType componentType)

@@ -23,4 +23,9 @@
       </None>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="DocuGroup\Dto\" />
+      <Folder Include="DocuGroup\Mapper\" />
+    </ItemGroup>
+
 </Project>

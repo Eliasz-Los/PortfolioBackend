@@ -16,6 +16,7 @@ using DAL.Repository.hospital;
 using Domain.hospital;
 using Microsoft.EntityFrameworkCore;
 using PortfolioBackend.RateLimiting;
+using PortfolioBackend.Services;
 using QuestPDF.Infrastructure;
 
 //License for QuestPDF for nowfree unless 1m revenue is reached
@@ -65,6 +66,9 @@ builder.Services.AddScoped<IInvoiceManager, InvoiceManager>();
 builder.Services.AddScoped<IValidation<Patient>, Validation<Patient>>();
 builder.Services.AddScoped<IValidation<Doctor>, Validation<Doctor>>();
 builder.Services.AddScoped<IValidation<Appointment>, Validation<Appointment>>();
+
+// DocuGroup
+builder.Services.AddDocuGroupDi();
 
 
 builder.Services.AddOpenApi();
