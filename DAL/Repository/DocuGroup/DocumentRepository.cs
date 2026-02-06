@@ -13,17 +13,22 @@ public class DocumentRepository : IDocumentRepository
         _context = context;
     }
 
-    public async Task<GroupDocument?> ReadDocumentById(Guid documentId)
+    public async Task<GroupDocument> ReadDocumentById(Guid documentId)
     {
-        return await _context.GroupDocuments.FindAsync(documentId);
+        var document = await _context.GroupDocuments.FindAsync(documentId);
+        if (document == null)
+            throw new KeyNotFoundException($"Document with ID {documentId} not found.");
+        return document;
     }
 
-    public async Task<GroupDocument?> ReadDocumentWithComponentsById(Guid documentId)
+    public async Task<GroupDocument> ReadDocumentWithComponentsById(Guid documentId)
     {
-        return await _context.GroupDocuments
+        var documentWithComponents = await _context.GroupDocuments
             .Include(d => d.Components)
-            .Where(d => d.Id == documentId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(d => d.Id == documentId);
+        if (documentWithComponents == null)
+            throw new KeyNotFoundException($"Document with ID {documentId} not found.");
+        return documentWithComponents;
     }
 
     public async Task<IEnumerable<GroupDocument>> ReadAllDocumentsByUserId(string userId)
@@ -39,7 +44,7 @@ public class DocumentRepository : IDocumentRepository
           await _context.GroupDocuments.AddAsync(document);
     }
 
-    public async Task RemoveDocument(Guid documentId)
+    public async Task DeleteDocument(Guid documentId)
     {
         var document = await  ReadDocumentById(documentId);
         if (document is null)

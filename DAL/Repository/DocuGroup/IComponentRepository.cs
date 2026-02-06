@@ -5,11 +5,11 @@ namespace DAL.Repository.DocuGroup;
 
 public interface IComponentRepository
 {
-    Task<DocumentComponent?> ReadComponentByDocumentIdAndComponentId(Guid documentId, Guid componentId);
-
-    Task CreateComponentForDocumentByDocumentId(Guid documentId, DocumentComponent component);
-
+    Task<DocumentComponent> ReadComponentByDocumentIdAndComponentId(Guid documentId, Guid componentId);
+    Task<IEnumerable<DocumentComponent>> ReadAllComponentsByDocumentId(Guid documentId);
+    Task CreateComponentForDocumentByDocumentId(DocumentComponent component);
+    Task UpdateContent(Guid documentId,Guid componentId ,string? lastPublishedContentJson);
     Task ReorderComponent(Guid documentId, Guid componentId, int newOrder);
-    Task ChangeType(Guid documentId, Guid componentId, ComponentType newType, bool clearLastPublishedContent = true);
-
+    Task UpdateType(Guid documentId, Guid componentId, ComponentType newType, bool clearLastPublishedContent = true);
+    Task DeleteComponent(Guid documentId, Guid componentId);
 }

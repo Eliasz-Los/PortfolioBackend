@@ -1,3 +1,7 @@
+using BL.DocuGroup.Caching;
+using BL.DocuGroup.Dto.Component;
+using BL.DocuGroup.Dto.Document;
+using BL.DocuGroup.Dto.Draft;
 using DAL.Repository.DocuGroup;
 using DAL.Repository.UoW;
 using Domain.DocuGroup;
@@ -5,17 +9,24 @@ using Domain.DocuGroup.types;
 
 namespace BL.DocuGroup;
 
-public class DocumentManager : IDocumentManager
+/// <summary>
+/// Document manager \- serve draft from redis cache if it exists, otherwise published.
+/// Publish copies draft \-> DB and clears draft.
+/// </summary>
+public class DocumentManager : IDocumentManager, IDraftDocumentManager
 {
     private readonly IDocumentRepository _repository;
-    private readonly IComponentRepository _componentRepository;
+    private readonly IComponentManager _componentManager;
     private readonly UnitOfWork _uow;
+    private readonly IDocumentDraftStore _draftStore;
 
-    public DocumentManager(IDocumentRepository repository, UnitOfWork uow, IComponentRepository componentRepository)
+    //TODO: more dto's
+    public DocumentManager(IDocumentRepository repository, UnitOfWork uow, IComponentManager componentManager, IDocumentDraftStore draftStore)
     {
         _repository = repository;
         _uow = uow;
-        _componentRepository = componentRepository;
+        _componentManager = componentManager;
+        _draftStore = draftStore;
     }
 
     public async Task<GroupDocument?> GetDocumentWithComponentsById(Guid documentId)
@@ -35,18 +46,14 @@ public class DocumentManager : IDocumentManager
         {
             await _repository.CreateDocument(document);
          
-            await _componentRepository.CreateComponentForDocumentByDocumentId(document.Id, new DocumentComponent
+            await _componentManager.AddComponentForDocumentByDocumentId( new AddComponentDto
             { 
-                Id = Guid.NewGuid(),
-               Order = 1,
                LastPublishedContentJson = "Welcome to your new document!",
                GroupDocumentId = document.Id,
                ComponentType = ComponentType.Title
             });
-            await _componentRepository.CreateComponentForDocumentByDocumentId(document.Id, new DocumentComponent
+            await _componentManager.AddComponentForDocumentByDocumentId( new AddComponentDto
             {
-                Id = Guid.NewGuid(),
-                Order = 2,
                 LastPublishedContentJson = "Here is a sample paragraph. You can edit this content.",
                 GroupDocumentId = document.Id,
                 ComponentType = ComponentType.Paragraph
@@ -63,6 +70,69 @@ public class DocumentManager : IDocumentManager
 
     public async Task DeleteDocument(Guid documentId)
     {
-        await _repository.RemoveDocument(documentId);
+        
+        await _uow.BeginTransaction();
+        try
+        {
+            await _repository.DeleteDocument(documentId);
+            await _uow.Commit();
+        }
+        catch
+        {
+            await _uow.Rollback();
+            throw;
+        }
+    }
+
+    public async Task PublishDocument(PublishDto publishDto)
+    {
+        await _uow.BeginTransaction();
+        try
+        {
+            var draft = await _draftStore.GetDraftSnapshotJson(publishDto.Id);
+            if (string.IsNullOrWhiteSpace(draft))
+            {
+                throw new InvalidOperationException($"No draft exists to publish for this documentId: {publishDto.Id}.");
+            }
+
+            var document = await _repository.ReadDocumentById(publishDto.Id);
+            document.Publish(publishDto.Title, draft, DateTimeOffset.UtcNow, publishDto.publishedByUserId);
+            await _uow.Commit();
+            
+            await _draftStore.RemoveDraft(publishDto.Id);
+        }
+        catch
+        {
+            await _uow.Rollback();
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Get document with components, serving draft from cache if it exists.
+    /// </summary>
+    public async Task<GroupDocument> GetDraftDocumentWithComponentsById(Guid documentId)
+    {
+        var document = await _repository.ReadDocumentWithComponentsById(documentId);
+
+        var draft = await _draftStore.GetDraftSnapshotJson(documentId);
+
+        if (!string.IsNullOrWhiteSpace(draft))
+        {
+            document.Publish(document.Title, draft, document.LastPublishedAtUtc, document.LastPublishedByUserId);
+        }
+        return document;
+    }
+
+    
+    //TODO : toevoegen bij components ipv ineens op te slaan
+    /// <summary>
+    /// Call this from component edits/reorder/type changes instead of saving to DB.
+    /// Store the whole document snapshot as JSON in Redis.
+    /// This way it's easy faster to edit multiple components before publishing.
+    /// </summary>
+    public async Task SaveDraftSnapshot(DraftDto draftDto)
+    {
+        await _draftStore.SetDraftSnapshotJson(draftDto.Id, draftDto.SnapshotJson, TimeSpan.FromDays(30));
     }
 }
