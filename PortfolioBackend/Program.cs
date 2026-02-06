@@ -57,7 +57,8 @@ builder.Services
             ValidAudience = audience,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            NameClaimType = ClaimTypes.NameIdentifier // maps to `User.Identity.Name` if desired
+            NameClaimType = ClaimTypes.NameIdentifier, // maps to `User.Identity.Name` if desired
+            RoleClaimType = "realm_access.roles" // adjust if your roles are in a different claim
         };
     });
 

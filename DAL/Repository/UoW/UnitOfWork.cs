@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace DAL.Repository.UoW;
 
-public class UnitOfWork : IAsyncDisposable
+public class UnitOfWork : IAsyncDisposable, IUnitOfWork
 {
     private readonly PortfolioDbContext _context;
     private IDbContextTransaction? _transaction;

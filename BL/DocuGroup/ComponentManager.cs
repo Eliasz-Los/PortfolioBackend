@@ -8,9 +8,9 @@ namespace BL.DocuGroup;
 public class ComponentManager : IComponentManager
 {
     private readonly IComponentRepository _componentRepository;
-    private readonly UnitOfWork _uow;
+    private readonly IUnitOfWork _uow;
 
-    public ComponentManager(IComponentRepository componentRepository, UnitOfWork uow)
+    public ComponentManager(IComponentRepository componentRepository, IUnitOfWork uow)
     {
         _componentRepository = componentRepository;
         _uow = uow;

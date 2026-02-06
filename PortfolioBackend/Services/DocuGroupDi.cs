@@ -11,7 +11,7 @@ public static class DocuGroupDi
     {
         
         // Repositories & UoW
-        services.AddScoped<UnitOfWork>();
+        services.AddScoped<IUnitOfWork,UnitOfWork>();
         services.AddScoped<IDocumentRepository,DocumentRepository>();
         services.AddScoped<IComponentRepository, ComponentRepository>();
 

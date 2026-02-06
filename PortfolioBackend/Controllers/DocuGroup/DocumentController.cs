@@ -9,7 +9,7 @@ namespace PortfolioBackend.Controllers.DocuGroup;
 
 [ApiController]
 [Route("api/docugroup/documents/")]
-[Authorize]
+[Authorize(Roles = "user")]
 public class DocumentController : ControllerBase
 {
     private readonly IDocumentManager _documentManager;

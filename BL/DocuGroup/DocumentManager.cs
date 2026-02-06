@@ -17,11 +17,11 @@ public class DocumentManager : IDocumentManager, IDraftDocumentManager
 {
     private readonly IDocumentRepository _repository;
     private readonly IComponentManager _componentManager;
-    private readonly UnitOfWork _uow;
+    private readonly IUnitOfWork _uow;
     private readonly IDocumentDraftStore _draftStore;
 
     //TODO: more dto's
-    public DocumentManager(IDocumentRepository repository, UnitOfWork uow, IComponentManager componentManager, IDocumentDraftStore draftStore)
+    public DocumentManager(IDocumentRepository repository, IUnitOfWork uow, IComponentManager componentManager, IDocumentDraftStore draftStore)
     {
         _repository = repository;
         _uow = uow;

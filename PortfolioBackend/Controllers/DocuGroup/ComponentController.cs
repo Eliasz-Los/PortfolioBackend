@@ -7,7 +7,7 @@ namespace PortfolioBackend.Controllers.DocuGroup;
 
 [ApiController]
 [Route("api/docugroup/components")]
-[Authorize]
+[Authorize(Roles = "user")]
 public class ComponentController : ControllerBase
 {
     private readonly IComponentManager _componentManager;
