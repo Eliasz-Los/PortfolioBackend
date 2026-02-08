@@ -35,7 +35,7 @@ public class PortfolioDbContext : DbContext
 
     public PortfolioDbContext(DbContextOptions options) : base(options)
     {
-        PortfolioDbInitializer.Initialize(this, false);
+        PortfolioDbInitializer.Initialize(this, true);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

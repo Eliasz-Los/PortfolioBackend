@@ -1,4 +1,6 @@
 ﻿using Domain;
+using Domain.DocuGroup;
+using Domain.DocuGroup.types;
 using Domain.hospital;
 using Domain.hospital.types;
 using Domain.pathfinder;
@@ -34,6 +36,18 @@ public class PortfolioDbInitializer
         
         var invoices = GenerateInvoicesForPatients(patients);
         context.Invoices.AddRange(invoices);
+        
+        GroupDocument doc1 = new GroupDocument( 
+            Guid.NewGuid(), 
+            "Project Plan", 
+            DateTimeOffset.UtcNow, DateTimeOffset.UtcNow);
+        DocumentComponent comp1 = new DocumentComponent(Guid.NewGuid(), 1,"Introduction", doc1.Id, ComponentType.Title );
+        DocumentComponent comp2 = new DocumentComponent(Guid.NewGuid(), 2,"woops", doc1.Id, ComponentType.Paragraph );
+        
+        
+        doc1.Components.Add(comp1);
+        doc1.Components.Add(comp2);
+        context.GroupDocuments.Add(doc1);
         
         context.SaveChanges();
         

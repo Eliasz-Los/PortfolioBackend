@@ -17,7 +17,19 @@ public class GroupDocument
     public ICollection<DocumentComponent> Components { get; set; } = new List<DocumentComponent>();
     public ICollection<Membership> Memberships { get; set; } = new List<Membership>();
     public ICollection<PublishEvent> Events { get; set; } = new List<PublishEvent>();
-    
+
+    public GroupDocument(Guid id, string snapshotJson, DateTimeOffset lastPublishedAtUtc, DateTimeOffset createdAtUtc)
+    {
+        Id = id;
+        SnapshotJson = snapshotJson;
+        LastPublishedAtUtc = lastPublishedAtUtc;
+        CreatedAtUtc = createdAtUtc;
+    }
+
+    public GroupDocument()
+    {
+    }
+
     public void Publish(string newTitle, string newSnapshotJson, DateTimeOffset publishedAtUtc, string publishedByUserId)
     {
         Title = newTitle;

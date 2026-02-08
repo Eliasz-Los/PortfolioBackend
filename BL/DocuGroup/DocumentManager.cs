@@ -1,3 +1,4 @@
+using AutoMapper;
 using BL.DocuGroup.Caching;
 using BL.DocuGroup.Dto.Component;
 using BL.DocuGroup.Dto.Document;
@@ -19,14 +20,18 @@ public class DocumentManager : IDocumentManager, IDraftDocumentManager
     private readonly IComponentManager _componentManager;
     private readonly IUnitOfWork _uow;
     private readonly IDocumentDraftStore _draftStore;
+    private readonly IMembershipManager _membershipManager;
+    private readonly IMapper _mapper;
 
     //TODO: more dto's
-    public DocumentManager(IDocumentRepository repository, IUnitOfWork uow, IComponentManager componentManager, IDocumentDraftStore draftStore)
+    public DocumentManager(IDocumentRepository repository, IUnitOfWork uow, IComponentManager componentManager, IDocumentDraftStore draftStore, IMembershipManager membershipManager, IMapper mapper)
     {
         _repository = repository;
         _uow = uow;
         _componentManager = componentManager;
         _draftStore = draftStore;
+        _membershipManager = membershipManager;
+        _mapper = mapper;
     }
 
     public async Task<GroupDocument?> GetDocumentWithComponentsById(Guid documentId)
@@ -34,28 +39,44 @@ public class DocumentManager : IDocumentManager, IDraftDocumentManager
         return await _repository.ReadDocumentWithComponentsById(documentId);
     }
 
-    public async Task<IEnumerable<GroupDocument>> GetAllDocumentsByUserId(string userId)
+    public async Task<IEnumerable<DocumentDto>> GetAllDocumentsByUserId(string userId)
     {
-        return await _repository.ReadAllDocumentsByUserId(userId);
+        var documents = await _repository.ReadAllDocumentsByUserId(userId);
+        return _mapper.Map<IEnumerable<DocumentDto>>(documents);
     }
 
-    public async Task AddDocument(GroupDocument document)
+    public async Task AddDocument(AddDocumentDto document, string userId)
     {
         await _uow.BeginTransaction();
         try
         {
-            await _repository.CreateDocument(document);
+            GroupDocument newDocument = new GroupDocument()
+            {
+                Id = Guid.NewGuid(),
+                Title = document.Title,
+                CreatedAtUtc = DateTimeOffset.UtcNow,
+                CreatedByUserId = userId
+            };
+           
+            await _repository.CreateDocument(newDocument);
+            
+            await _membershipManager.AddMembership(
+                new Membership(id: Guid.NewGuid(), 
+                groupDocumentId: newDocument.Id, 
+                role: DocumentRole.Owner, 
+                userId: userId, 
+                lastSeenAtUtc: DateTimeOffset.UtcNow));
          
             await _componentManager.AddComponentForDocumentByDocumentId( new AddComponentDto
             { 
                LastPublishedContentJson = "Welcome to your new document!",
-               GroupDocumentId = document.Id,
+               GroupDocumentId = newDocument.Id,
                ComponentType = ComponentType.Title
             });
             await _componentManager.AddComponentForDocumentByDocumentId( new AddComponentDto
             {
                 LastPublishedContentJson = "Here is a sample paragraph. You can edit this content.",
-                GroupDocumentId = document.Id,
+                GroupDocumentId = newDocument.Id,
                 ComponentType = ComponentType.Paragraph
             });
             await _uow.Commit();

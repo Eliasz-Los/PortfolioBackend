@@ -9,7 +9,8 @@ namespace PortfolioBackend.Controllers.DocuGroup;
 
 [ApiController]
 [Route("api/docugroup/documents/")]
-[Authorize(Roles = "user")]
+[Authorize]
+// [Authorize(Roles = "user")]
 public class DocumentController : ControllerBase
 {
     private readonly IDocumentManager _documentManager;
@@ -42,7 +43,7 @@ public class DocumentController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateDocument(GroupDocument document)
+    public async Task<IActionResult> CreateDocument(AddDocumentDto documentDto)
     {
         var userId =
             User.FindFirstValue(ClaimTypes.NameIdentifier) ??
@@ -51,7 +52,7 @@ public class DocumentController : ControllerBase
         if (string.IsNullOrWhiteSpace(userId))
             return Unauthorized();
         
-        await _documentManager.AddDocument(document);
+        await _documentManager.AddDocument(documentDto, userId);
         return Ok();
     }
 

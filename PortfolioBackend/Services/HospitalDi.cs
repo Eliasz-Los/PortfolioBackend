@@ -18,9 +18,6 @@ public static class HospitalDi
        services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
        services.AddScoped<IPatientRepository, PatientRepository>();
        services.AddScoped<IDoctorRepository, DoctorRepository>();
-       //Redis
-       services.AddScoped<IDoctorSearchCache, DoctorSearchCache>();
-       services.AddScoped<IPatientSearchCache, PatientSearchCache>();
         
         // Managers
        services.AddScoped<IBaseManager<Patient, PatientDto, AddPatientDto>, PatientManager> ();
@@ -40,6 +37,10 @@ public static class HospitalDi
       services.AddAutoMapper(typeof(AppointmentMappingProfile));
       services.AddAutoMapper(typeof(DoctorMappingProfile));
       services.AddAutoMapper(typeof(InvoiceMappingProfile));
+      
+      // Redis cache
+      services.AddScoped<IDoctorSearchCache, DoctorSearchCache>();
+      services.AddScoped<IPatientSearchCache, PatientSearchCache>();
         
         return services;
     }

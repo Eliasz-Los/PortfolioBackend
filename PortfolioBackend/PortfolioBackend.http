@@ -27,11 +27,23 @@ Content-Type: application/json
 GET {{PortfolioBackend_HostAddress}}/api/hospital/patients
 Accept: application/json
 
+### POST YOUR ACCESS TOKEN
+POST http://localhost:8080/realms/portfolio/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
 
-############# Market api calls
-GET {{PortfolioBackend_HostAddress}}/api/MarketData/quotes/AMZN
-Accept: application/json
+client_id=portfolio_client&username=darren&password=test&grant_type=password&scope=openid
 
-####
-GET {{PortfolioBackend_HostAddress}}/api/MarketData/quotes/BINANCE:BTCUSDT
-Accept: application/json
+//saving the access token
+> {%
+    client.global.set("access_token", response.body.access_token);
+%}
+
+
+######### Document creation
+POST {{PortfolioBackend_HostAddress}}/api/docugroup/documents
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "Title": "Test document"
+}

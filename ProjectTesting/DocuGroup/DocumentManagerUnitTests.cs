@@ -1,3 +1,4 @@
+using AutoMapper;
 using BL.DocuGroup;
 using BL.DocuGroup.Caching;
 using BL.DocuGroup.Dto.Component;
@@ -18,12 +19,16 @@ public class DocumentManagerUnitTests
     private readonly Mock<IUnitOfWork> _unitOfWork;
     private readonly Mock<IDocumentRepository> _documentRepository;
     private readonly DocumentManager _documentManager;
+    private readonly Mock<IMembershipManager> _membershipManager;
+    private readonly Mock<IMapper> _mapper;
     
     public DocumentManagerUnitTests()
     {
+        _membershipManager = new Mock<IMembershipManager>();
         _draftStore = new Mock<IDocumentDraftStore>();
         _componentManager = new Mock<IComponentManager>();
         _documentRepository = new Mock<IDocumentRepository>();
+        _mapper = new Mock<IMapper>();
         
         _unitOfWork = new Mock<IUnitOfWork>();
         _unitOfWork.Setup(x => x.BeginTransaction()).Returns(Task.CompletedTask);
@@ -34,34 +39,54 @@ public class DocumentManagerUnitTests
             _documentRepository.Object,
             _unitOfWork.Object,
             _componentManager.Object, 
-            _draftStore.Object);
+            _draftStore.Object,
+            _membershipManager.Object, 
+            _mapper.Object);
     }
     
     [Fact]
     public async Task AddDocument_CreatesDocument_AddsTwoComponents_AndCommits()
     {
-        var doc = new GroupDocument { Id = Guid.NewGuid(), Title = "T" };
-
-        _unitOfWork.Setup(x => x.BeginTransaction()).Returns(Task.CompletedTask);
-        _documentRepository.Setup(x => x.CreateDocument(doc)).Returns(Task.CompletedTask);
-
-        _componentManager
-            .Setup(x => x.AddComponentForDocumentByDocumentId(It.IsAny<AddComponentDto>()))
+        //Arrange
+        var addDocumentDto = new AddDocumentDto { Title = "New Doc" };
+        var userId = "user-1";
+        Guid generatedId = Guid.NewGuid();
+        
+        _documentRepository
+            .Setup(r => r.CreateDocument(It.IsAny<GroupDocument>()))
+            .Callback<GroupDocument>(d => generatedId = d.Id)
             .Returns(Task.CompletedTask);
 
-        _unitOfWork.Setup(x => x.Commit()).Returns(Task.CompletedTask);
+        _membershipManager
+            .Setup(m => m.AddMembership(It.IsAny<Membership>()))
+            .Returns(Task.CompletedTask);
 
-        await _documentManager.AddDocument(doc);
-
-        _documentRepository.Verify(r => r.CreateDocument(doc), Times.Once);
-
+        _componentManager
+            .Setup(c => c.AddComponentForDocumentByDocumentId(It.IsAny<AddComponentDto>()))
+            .Returns(Task.CompletedTask);
+        //Act
+        await _documentManager.AddDocument(addDocumentDto, userId);
+        
+        //assert
+        _documentRepository.Verify(r => r.CreateDocument(It.Is<GroupDocument>(d =>
+            d.Id == generatedId &&
+            d.Title == addDocumentDto.Title &&
+            d.CreatedByUserId == userId
+        )), Times.Once);
+        
+        _membershipManager.Verify(m => m.AddMembership(It.Is<Membership>(m =>
+            m.GroupDocumentId == generatedId &&
+            m.UserId == userId &&
+            m.Role == DocumentRole.Owner
+        )), Times.Once);
+        
         _componentManager.Verify(x => x.AddComponentForDocumentByDocumentId(It.Is<AddComponentDto>(d =>
-            d.GroupDocumentId == doc.Id &&
+            d.GroupDocumentId == generatedId &&
             d.ComponentType == ComponentType.Title &&
             d.LastPublishedContentJson == "Welcome to your new document!")), Times.Once);
 
         _componentManager.Verify(x => x.AddComponentForDocumentByDocumentId(It.Is<AddComponentDto>(d =>
-            d.GroupDocumentId == doc.Id &&
+            d.GroupDocumentId == generatedId &&
             d.ComponentType == ComponentType.Paragraph &&
             d.LastPublishedContentJson == "Here is a sample paragraph. You can edit this content.")), Times.Once);
 

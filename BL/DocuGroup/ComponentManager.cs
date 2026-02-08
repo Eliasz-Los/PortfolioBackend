@@ -111,7 +111,11 @@ public class ComponentManager : IComponentManager
     private async Task<int> GetMaxOrderForDocumentById(Guid documentId)
     {
         var components = await _componentRepository.ReadAllComponentsByDocumentId(documentId);
+        if (components == null || !components.Any())
+        {
+            return 0;
+        }
         var documentComponents = components.ToList();
-        return documentComponents.Any() ? documentComponents.Max(c => c.Order) : 0;
+        return documentComponents.Count;
     }
 }

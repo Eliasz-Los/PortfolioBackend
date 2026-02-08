@@ -1,20 +1,7 @@
 using System.Security.Claims;
+using System.Text.Json;
 using System.Text.Json.Serialization;
-using BL.hospital;
-using BL.hospital.Caching;
-using BL.hospital.dto;
-using BL.hospital.invoice;
-using BL.hospital.mapper;
-using BL.hospital.validation;
-using BL.pathfinder;
-using BL.Pathfinder;
-using BL.Pathfinder.algorithm;
-using BL.Pathfinder.analyzer;
-using BL.pathfinder.mapper;
 using DAL.EntityFramework;
-using DAL.Repository;
-using DAL.Repository.hospital;
-using Domain.hospital;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -45,6 +32,8 @@ builder.Services
     {
         var authority = builder.Configuration["Keycloak:Authority"];
         var audience = builder.Configuration["Keycloak:Audience"];
+        var clientId = builder.Configuration["Keycloak:ClientId"] ?? "portfolio_client";
+
 
         options.Authority = authority;
         options.RequireHttpsMetadata = false; // local dev
@@ -54,12 +43,43 @@ builder.Services
             ValidateIssuer = true,
             ValidIssuer = authority,
             ValidateAudience = true,
-            ValidAudience = audience,
+            ValidAudiences = new[] { "account", clientId, audience }.Where(x => !string.IsNullOrWhiteSpace(x)),
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            NameClaimType = ClaimTypes.NameIdentifier, // maps to `User.Identity.Name` if desired
-            RoleClaimType = "realm_access.roles" // adjust if your roles are in a different claim
+            NameClaimType = ClaimTypes.NameIdentifier, 
+            RoleClaimType = ClaimTypes.Role
         };
+        
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = context =>
+            {
+                if (context.Principal?.Identity is not ClaimsIdentity identity)
+                    return Task.CompletedTask;
+
+                // Keycloak: resource_access.{clientId}.roles = [ "user", ... ]
+                var resourceAccess = context.Principal.FindFirst("resource_access")?.Value;
+                if (string.IsNullOrWhiteSpace(resourceAccess))
+                    return Task.CompletedTask;
+
+                using var doc = JsonDocument.Parse(resourceAccess);
+                if (!doc.RootElement.TryGetProperty(clientId, out var clientNode))
+                    return Task.CompletedTask;
+
+                if (!clientNode.TryGetProperty("roles", out var rolesNode) || rolesNode.ValueKind != JsonValueKind.Array)
+                    return Task.CompletedTask;
+
+                foreach (var r in rolesNode.EnumerateArray())
+                {
+                    var role = r.GetString();
+                    if (!string.IsNullOrWhiteSpace(role))
+                        identity.AddClaim(new Claim(ClaimTypes.Role, role));
+                }
+
+                return Task.CompletedTask;
+            }
+        };
+        
     });
 
 builder.Services.AddAuthorization();
