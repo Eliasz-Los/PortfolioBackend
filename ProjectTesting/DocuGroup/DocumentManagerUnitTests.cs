@@ -118,13 +118,19 @@ public class DocumentManagerUnitTests
     [Fact]
     public async Task GetAllDocumentsByUserId_ReturnsDocuments()
     {
+        //Arrange
         var userId = "user-1";
         var docs = new[] { new GroupDocument { Id = Guid.NewGuid() } };
 
         _documentRepository.Setup(r => r.ReadAllDocumentsByUserId(userId)).ReturnsAsync(docs);
-
+        _mapper
+            .Setup(m => m.Map<IEnumerable<DocumentDto>>(It.Is<IEnumerable<GroupDocument>>(x => x == docs)))
+            .Returns(new[] { new DocumentDto() });
+        
+        //Act
         var result = await _documentManager.GetAllDocumentsByUserId(userId);
 
+        //Assert
         Assert.Single(result);
         _documentRepository.Verify(r => r.ReadAllDocumentsByUserId(userId), Times.Once);
     }

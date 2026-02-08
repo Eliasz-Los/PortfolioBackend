@@ -12,28 +12,12 @@
   &lt;Assembly Path="C:\Users\peril\.nuget\packages\questpdf\2025.12.1\lib\net8.0\QuestPDF.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
 	<s:String x:Key="/Default/Environment/Highlighting/HighlightingSourceSnapshotLocation/@EntryValue">C:\Users\peril\AppData\Local\JetBrains\Rider2025.1\resharper-host\temp\Rider\vAny\CoverageData\_PortfolioBackend.-274071460\Snapshot\snapshot.utdcvr</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=01e4d064_002Dbfd3_002D4a7a_002D8d4b_002Dd7a7836d078b/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="GetAppointmentsOfPatientById_ReturnsAppointments_WhenAppointmentsExist" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;xUnit::1EB9B43B-6305-419D-921C-C99F663746AC::net9.0::ProjectTesting.HospitalTests.AppointmentManagerUnitTests.GetAppointmentsOfPatientById_ReturnsAppointments_WhenAppointmentsExist&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
-&lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=37b792b6_002De824_002D4536_002D9f40_002D37364d5ad2f8/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="AddDocument_CreatesDocument_AddsTwoComponents_AndCommits" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;Project Location="C:\Users\peril\Documents\OsobneRzeczy\CSharp_dotnet\Portfolio\PortfolioBackend\ProjectTesting" Presentation="&amp;lt;ProjectTesting&amp;gt;" /&gt;&#xD;
-&lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b7d8938f_002Ddb17_002D40de_002D8925_002D01f8fe2307a7/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="AppointmentManagerUnitTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;xUnit::1EB9B43B-6305-419D-921C-C99F663746AC::net9.0::ProjectTesting.HospitalTests.AppointmentManagerUnitTests&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
-&lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=c9f77625_002D0b90_002D41c5_002D85df_002D2113f289daad/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Search_WhenTermIsName_CallsRepo_AndReturnsMappedDtos" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;ProjectFolder&gt;1EB9B43B-6305-419D-921C-C99F663746AC/d:HospitalTests&lt;/ProjectFolder&gt;&#xD;
-&lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ca5ad1fe_002Df2e4_002D4418_002Db959_002D204ddd743132/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="PatientManagerUnitTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;ProjectFolder&gt;1EB9B43B-6305-419D-921C-C99F663746AC/d:HospitalTests&lt;/ProjectFolder&gt;&#xD;
-&lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f05627de_002D8ade_002D40cd_002D9e42_002D60c41360e54a/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="InvoiceManagerUnitTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;Project Location="C:\Users\peril\Documents\OsobneRzeczy\CSharp_dotnet\Portfolio\PortfolioBackend\ProjectTesting" Presentation="&amp;lt;ProjectTesting&amp;gt;" /&gt;&#xD;
-&lt;/SessionState&gt;</s:String>
+	
+	
+	
+	
+	
+	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fdbf0db2_002D2643_002D498c_002D907d_002D1c18a4e74e44/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="UnitTest1" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Project Location="C:\Users\peril\Documents\OsobneRzeczy\CSharp_dotnet\Portfolio\PortfolioBackend\ProjectTesting" Presentation="&amp;lt;ProjectTesting&amp;gt;" /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
