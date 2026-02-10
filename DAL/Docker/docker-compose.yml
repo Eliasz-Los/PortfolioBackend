@@ -23,6 +23,7 @@ services:
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.5.0
+    command: start-dev --import-realm
     depends_on:
       - postgres
     environment:
@@ -38,9 +39,10 @@ services:
 
       KC_HOSTNAME_STRICT: "false"
       KC_HTTP_ENABLED: "true"
-    command: start-dev
     ports:
       - "8080:8080"
+    volumes:
+      - ./DAL/Docker/keycloak:/opt/keycloak/data/import
     networks:
       - postgres_network
 
