@@ -7,5 +7,5 @@ public class ChangeTypeComponentDto
     public Guid Id { get; set; }
     public Guid GroupDocumentId { get; set; }
     public ComponentType Type { get; set; }
-    public bool clearLastPublishedContent = true;
+    public bool ClearLastPublishedContent = true;
 }

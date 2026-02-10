@@ -1,4 +1,5 @@
 using BL.DocuGroup;
+using BL.DocuGroup.Draft;
 using BL.DocuGroup.Dto.Component;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,12 +8,13 @@ namespace PortfolioBackend.Controllers.DocuGroup;
 
 [ApiController]
 [Route("api/docugroup/components")]
-[Authorize(Roles = "user")]
+[Authorize]
+// [Authorize(Roles = "user")]
 public class ComponentController : ControllerBase
 {
-    private readonly IComponentManager _componentManager;
+    private readonly IDraftComponentManager _componentManager;
 
-    public ComponentController(IComponentManager componentManager)
+    public ComponentController(IDraftComponentManager componentManager)
     {
         _componentManager = componentManager;
     }
@@ -20,7 +22,7 @@ public class ComponentController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> AddComponentToDocument(AddComponentDto componentDto)
     {
-        await _componentManager.AddComponentForDocumentByDocumentId(componentDto);
+        await _componentManager.AddComponent(componentDto);
         return Ok();
     }
 
@@ -34,7 +36,7 @@ public class ComponentController : ControllerBase
     [HttpPut("reorder")]
     public async Task<IActionResult> ReorderComponent(ReorderComponentDto reorderComponentDto)
     {
-        await _componentManager.ReorderComponent(reorderComponentDto);
+        await _componentManager.Reorder(reorderComponentDto);
         return Ok();
     }
 
@@ -48,7 +50,7 @@ public class ComponentController : ControllerBase
     [HttpDelete("{documentId:guid}/{componentId:guid}")]
     public async Task<IActionResult> RemoveComponent(Guid documentId, Guid componentId)
     {
-        await _componentManager.RemoveComponent(documentId, componentId);
+        await _componentManager.Remove(documentId, componentId);
         return Ok();
     }
     

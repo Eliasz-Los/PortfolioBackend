@@ -1,5 +1,6 @@
 using BL.DocuGroup;
 using BL.DocuGroup.Caching;
+using BL.DocuGroup.Draft;
 using BL.DocuGroup.Mapper;
 using DAL.Repository.DocuGroup;
 using DAL.Repository.UoW;
@@ -18,16 +19,19 @@ public static class DocuGroupDi
         services.AddScoped<IMembershipRepository, MembershipRepository>();
 
         // Managers
-        services.AddScoped<DocumentManager>();
-        services.AddScoped<IDocumentManager>(sp => sp.GetRequiredService<DocumentManager>());
-        services.AddScoped<IDraftDocumentManager>(sp => sp.GetRequiredService<DocumentManager>());
+        services.AddScoped<IDocumentManager,DocumentManager>();
         services.AddScoped<IComponentManager, ComponentManager>();
         services.AddScoped<IMembershipManager, MembershipManager>();
+        
+        // Draft services
+        services.AddScoped<IDraftSnapshotService, DraftSnapshotService>();
+        services.AddScoped<IDraftDocumentManager, DraftDocumentManager>();
+        services.AddScoped<IDraftComponentManager, DraftComponentManager>();
         
         // Mappers
         services.AddAutoMapper(typeof(DocumentMappingProfile));
         // Redis cache
-        services.AddScoped<IDocumentDraftStore, DocumentDraftCache>();
+        services.AddScoped<IDocumentDraftCache, DocumentDraftCache>();
         
         return services;
     }

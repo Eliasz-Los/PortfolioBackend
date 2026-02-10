@@ -1,5 +1,7 @@
+using System.Text.Json;
 using AutoMapper;
 using BL.DocuGroup.Caching;
+using BL.DocuGroup.Draft;
 using BL.DocuGroup.Dto.Component;
 using BL.DocuGroup.Dto.Document;
 using BL.DocuGroup.Dto.Draft;
@@ -11,27 +13,33 @@ using Domain.DocuGroup.types;
 namespace BL.DocuGroup;
 
 /// <summary>
-/// Document manager \- serve draft from redis cache if it exists, otherwise published.
-/// Publish copies draft \-> DB and clears draft.
+/// Snapshot driven document manager.
+/// All document changes are made to a draft snapshot in cache,
+/// and then published to the database when the user chooses to publish.
+/// This allows for a more seamless user experience,
+/// as they can make multiple changes and only save once,
+/// rather than having to wait for each change to be saved to the database.
 /// </summary>
-public class DocumentManager : IDocumentManager, IDraftDocumentManager
+public class DocumentManager : IDocumentManager
 {
     private readonly IDocumentRepository _repository;
     private readonly IComponentManager _componentManager;
     private readonly IUnitOfWork _uow;
-    private readonly IDocumentDraftStore _draftStore;
+    private readonly IDocumentDraftCache _draftCache;
     private readonly IMembershipManager _membershipManager;
     private readonly IMapper _mapper;
+    private readonly IDraftDocumentManager _draftDocumentManager;
+    
 
-    //TODO: more dto's
-    public DocumentManager(IDocumentRepository repository, IUnitOfWork uow, IComponentManager componentManager, IDocumentDraftStore draftStore, IMembershipManager membershipManager, IMapper mapper)
+    public DocumentManager(IDocumentRepository repository, IUnitOfWork uow, IComponentManager componentManager, IDocumentDraftCache draftCache, IMembershipManager membershipManager, IMapper mapper, IDraftDocumentManager draftDocumentManager)
     {
         _repository = repository;
         _uow = uow;
         _componentManager = componentManager;
-        _draftStore = draftStore;
+        _draftCache = draftCache;
         _membershipManager = membershipManager;
         _mapper = mapper;
+        _draftDocumentManager = draftDocumentManager;
     }
 
     public async Task<GroupDocument?> GetDocumentWithComponentsById(Guid documentId)
@@ -67,7 +75,7 @@ public class DocumentManager : IDocumentManager, IDraftDocumentManager
                 userId: userId, 
                 lastSeenAtUtc: DateTimeOffset.UtcNow));
          
-            await _componentManager.AddComponentForDocumentByDocumentId( new AddComponentDto
+            /*await _componentManager.AddComponentForDocumentByDocumentId( new AddComponentDto
             { 
                LastPublishedContentJson = "Welcome to your new document!",
                GroupDocumentId = newDocument.Id,
@@ -78,8 +86,34 @@ public class DocumentManager : IDocumentManager, IDraftDocumentManager
                 LastPublishedContentJson = "Here is a sample paragraph. You can edit this content.",
                 GroupDocumentId = newDocument.Id,
                 ComponentType = ComponentType.Paragraph
-            });
+            });*/
             await _uow.Commit();
+            
+            var snapshot = new DraftDocument
+            {
+                Id = newDocument.Id,
+                Title = newDocument.Title,
+                Components = new List<DraftComponent>
+                {
+                    new DraftComponent
+                    {
+                        Id =  Guid.NewGuid(),
+                        Order = 1,
+                        ComponentType = ComponentType.Title,
+                        LastPublishedContentJson = "Welcome to your new document!"
+                    },
+                    new DraftComponent
+                    {
+                        Id =  Guid.NewGuid(),
+                        Order = 2,
+                        ComponentType = ComponentType.Paragraph,
+                        LastPublishedContentJson = "Here is a sample paragraph. You can edit this content."
+                    }
+                }
+            };
+            
+            await _draftDocumentManager.SaveDraftSnapshot(snapshot);
+            
         }
         catch
         {
@@ -105,12 +139,15 @@ public class DocumentManager : IDocumentManager, IDraftDocumentManager
         }
     }
 
+    //TODO: this method instead of just saving it in the string
+    // it should save it in a structured manner
+    // saved memebers and components in the linked tables and not as part of the json string
     public async Task PublishDocument(PublishDto publishDto)
     {
         await _uow.BeginTransaction();
         try
         {
-            var draft = await _draftStore.GetDraftSnapshotJson(publishDto.Id);
+            var draft = await _draftCache.GetDraftSnapshotJson(publishDto.Id);
             if (string.IsNullOrWhiteSpace(draft))
             {
                 throw new InvalidOperationException($"No draft exists to publish for this documentId: {publishDto.Id}.");
@@ -118,42 +155,14 @@ public class DocumentManager : IDocumentManager, IDraftDocumentManager
 
             var document = await _repository.ReadDocumentById(publishDto.Id);
             document.Publish(publishDto.Title, draft, DateTimeOffset.UtcNow, publishDto.publishedByUserId);
-            await _uow.Commit();
+            await _uow.Commit(); // Here is it actually saved to the database and becomes the new published version of the document
             
-            await _draftStore.RemoveDraft(publishDto.Id);
+            await _draftCache.RemoveDraft(publishDto.Id);
         }
         catch
         {
             await _uow.Rollback();
             throw;
         }
-    }
-
-    /// <summary>
-    /// Get document with components, serving draft from cache if it exists.
-    /// </summary>
-    public async Task<GroupDocument> GetDraftDocumentWithComponentsById(Guid documentId)
-    {
-        var document = await _repository.ReadDocumentWithComponentsById(documentId);
-
-        var draft = await _draftStore.GetDraftSnapshotJson(documentId);
-
-        if (!string.IsNullOrWhiteSpace(draft))
-        {
-            document.Publish(document.Title, draft, document.LastPublishedAtUtc, document.LastPublishedByUserId);
-        }
-        return document;
-    }
-
-    
-    //TODO : toevoegen bij components ipv ineens op te slaan
-    /// <summary>
-    /// Call this from component edits/reorder/type changes instead of saving to DB.
-    /// Store the whole document snapshot as JSON in Redis.
-    /// This way it's easy faster to edit multiple components before publishing.
-    /// </summary>
-    public async Task SaveDraftSnapshot(DraftDto draftDto)
-    {
-        await _draftStore.SetDraftSnapshotJson(draftDto.Id, draftDto.SnapshotJson, TimeSpan.FromDays(30));
     }
 }

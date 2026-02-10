@@ -5,10 +5,8 @@ namespace Domain.DocuGroup;
 public class DocumentComponent
 {
     public Guid Id { get; set; }
-    public int Order { get; set; } // Everyone has the same layout by numbering the components
-    // Optional: keep published content per component if you want relational reads.
-    // If you rely on GroupDocument.SnapshotJson only, you can drop this.
-    public string? LastPublishedContentJson { get;  set; }
+    public int Order { get; set; }
+    public string LastPublishedContentJson { get; set; } = String.Empty;
     public ComponentType ComponentType { get; set; }    
     public Guid GroupDocumentId { get; set; }
     public GroupDocument GroupDocument { get; set; }
@@ -17,7 +15,7 @@ public class DocumentComponent
     {
     }
 
-    public DocumentComponent(Guid id, int order, string? lastPublishedContentJson, Guid groupDocumentId, ComponentType componentType)
+    public DocumentComponent(Guid id, int order, string lastPublishedContentJson, Guid groupDocumentId, ComponentType componentType)
     {
         Id = id;
         Order = order;

@@ -12,7 +12,7 @@ public interface IPatientSearchCache
 
 public class PatientSearchCache : IPatientSearchCache
 {
-  private static readonly JsonSerializerOptions jsonOptions = new(JsonSerializerDefaults.Web);
+  private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
   private readonly IDistributedCache _cache;
   
   public PatientSearchCache(IDistributedCache cache)
@@ -27,7 +27,7 @@ public class PatientSearchCache : IPatientSearchCache
     
     var cached =  await _cache.GetStringAsync(key, ct);
     if (string.IsNullOrWhiteSpace(cached)) return null; 
-    return JsonSerializer.Deserialize<IReadOnlyList<PatientDto>>(cached, jsonOptions);
+    return JsonSerializer.Deserialize<IReadOnlyList<PatientDto>>(cached, JsonOptions);
   }
 
 
@@ -35,7 +35,7 @@ public class PatientSearchCache : IPatientSearchCache
   {
     var key = BuildKey(term);
     if (key is null) return;
-    var payload = JsonSerializer.Serialize(patients, jsonOptions);
+    var payload = JsonSerializer.Serialize(patients, JsonOptions);
     var options = new DistributedCacheEntryOptions
     {      
       // AbsoluteExpirationRelativeToNow = ttl

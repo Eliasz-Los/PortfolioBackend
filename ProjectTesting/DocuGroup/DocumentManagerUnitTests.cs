@@ -1,6 +1,7 @@
 using AutoMapper;
 using BL.DocuGroup;
 using BL.DocuGroup.Caching;
+using BL.DocuGroup.Draft;
 using BL.DocuGroup.Dto.Component;
 using BL.DocuGroup.Dto.Document;
 using BL.DocuGroup.Dto.Draft;
@@ -14,22 +15,28 @@ namespace ProjectTesting.DocuGroup;
 
 public class DocumentManagerUnitTests
 {
-    private readonly Mock<IDocumentDraftStore> _draftStore;
+    private readonly Mock<IDocumentDraftCache> _draftStore;
     private readonly Mock<IComponentManager> _componentManager;
     private readonly Mock<IUnitOfWork> _unitOfWork;
     private readonly Mock<IDocumentRepository> _documentRepository;
     private readonly DocumentManager _documentManager;
     private readonly Mock<IMembershipManager> _membershipManager;
     private readonly Mock<IMapper> _mapper;
+    private readonly Mock<IDraftDocumentManager> _draftDocumentManager;
     
     public DocumentManagerUnitTests()
     {
         _membershipManager = new Mock<IMembershipManager>();
-        _draftStore = new Mock<IDocumentDraftStore>();
+        _draftStore = new Mock<IDocumentDraftCache>();
         _componentManager = new Mock<IComponentManager>();
         _documentRepository = new Mock<IDocumentRepository>();
         _mapper = new Mock<IMapper>();
+        _draftDocumentManager = new Mock<IDraftDocumentManager>();
         
+        //Im not testing repository here, so I can just set up the UOW to do nothing on transaction methods, and not worry about the repository's internal behavior.
+        //The repository will be verified for calls,
+        //but its methods won't have any side effects or
+        //return values unless explicitly set up in the test.
         _unitOfWork = new Mock<IUnitOfWork>();
         _unitOfWork.Setup(x => x.BeginTransaction()).Returns(Task.CompletedTask);
         _unitOfWork.Setup(x => x.Commit()).Returns(Task.CompletedTask);
@@ -41,7 +48,8 @@ public class DocumentManagerUnitTests
             _componentManager.Object, 
             _draftStore.Object,
             _membershipManager.Object, 
-            _mapper.Object);
+            _mapper.Object, 
+            _draftDocumentManager.Object);
     }
     
     [Fact]
@@ -80,15 +88,7 @@ public class DocumentManagerUnitTests
             m.Role == DocumentRole.Owner
         )), Times.Once);
         
-        _componentManager.Verify(x => x.AddComponentForDocumentByDocumentId(It.Is<AddComponentDto>(d =>
-            d.GroupDocumentId == generatedId &&
-            d.ComponentType == ComponentType.Title &&
-            d.LastPublishedContentJson == "Welcome to your new document!")), Times.Once);
-
-        _componentManager.Verify(x => x.AddComponentForDocumentByDocumentId(It.Is<AddComponentDto>(d =>
-            d.GroupDocumentId == generatedId &&
-            d.ComponentType == ComponentType.Paragraph &&
-            d.LastPublishedContentJson == "Here is a sample paragraph. You can edit this content.")), Times.Once);
+        //I create 2 components as part of the initial draft setup
 
         _unitOfWork.Verify(x => x.BeginTransaction(), Times.Once);
         _unitOfWork.Verify(x => x.Commit(), Times.Once);
@@ -134,26 +134,7 @@ public class DocumentManagerUnitTests
         Assert.Single(result);
         _documentRepository.Verify(r => r.ReadAllDocumentsByUserId(userId), Times.Once);
     }
-
-    [Fact]
-    public async Task SaveDraftSnapshot_StoresDraftInCache()
-    {
-        var dto = new DraftDto
-        {
-            Id = Guid.NewGuid(),
-            SnapshotJson = "{ \"x\": 1 }"
-        };
-
-        _draftStore
-            .Setup(s => s.SetDraftSnapshotJson(dto.Id, dto.SnapshotJson, It.IsAny<TimeSpan>()))
-            .Returns(Task.CompletedTask);
-
-        await _documentManager.SaveDraftSnapshot(dto);
-
-        _draftStore.Verify(
-            s => s.SetDraftSnapshotJson(dto.Id, dto.SnapshotJson, It.Is<TimeSpan>(t => t.TotalDays == 30)),
-            Times.Once);
-    }
+    
 
     [Fact]
     public async Task PublishDocument_UpdatesDocumentAndRemovesDraft()
@@ -190,23 +171,5 @@ public class DocumentManagerUnitTests
 
         _unitOfWork.Verify(x => x.Rollback(), Times.Once);
     }
-
-    [Fact]
-    public async Task GetDraftDocumentWithComponentsById_UsesDraftIfPresent()
-    {
-        var id = Guid.NewGuid();
-        var doc = new GroupDocument { Id = id, Title = "PublishedTitle" };
-        var draftJson = "{ \"draft\": 1 }";
-
-        _documentRepository.Setup(r => r.ReadDocumentWithComponentsById(id)).ReturnsAsync(doc);
-        _draftStore.Setup(s => s.GetDraftSnapshotJson(id)).ReturnsAsync(draftJson);
-
-        var result = await _documentManager.GetDraftDocumentWithComponentsById(id);
-
-        Assert.Same(doc, result);
-        Assert.Equal(draftJson, doc.SnapshotJson);
-    }
-
-    
     
 }

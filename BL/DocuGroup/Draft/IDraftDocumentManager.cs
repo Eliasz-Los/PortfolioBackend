@@ -1,10 +1,11 @@
 using BL.DocuGroup.Dto.Draft;
 using Domain.DocuGroup;
 
-namespace BL.DocuGroup;
+namespace BL.DocuGroup.Draft;
 
 public interface IDraftDocumentManager
 {
     Task<GroupDocument> GetDraftDocumentWithComponentsById(Guid documentId);
-    Task SaveDraftSnapshot(DraftDto draftDto);
+    Task SaveDraftSnapshot(DraftDocument draftDocument);
+    Task Remove(Guid documentId);
 }

@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using BL.DocuGroup;
+using BL.DocuGroup.Draft;
 using BL.DocuGroup.Dto.Document;
 using Domain.DocuGroup;
 using Microsoft.AspNetCore.Authorization;
@@ -56,7 +57,7 @@ public class DocumentController : ControllerBase
         return Ok();
     }
 
-    [HttpDelete]
+    [HttpDelete("{documentId:guid}")]
     public async Task<IActionResult> DeleteDocument(Guid documentId)
     {
         await _documentManager.DeleteDocument(documentId);

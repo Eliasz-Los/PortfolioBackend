@@ -47,3 +47,28 @@ Authorization: Bearer {{access_token}}
 {
   "Title": "Test document"
 }
+
+### add some components to the document
+POST {{PortfolioBackend_HostAddress}}/api/docugroup/components
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "LastPublishedContentJson": "This is a test component",
+  "ComponentType": 1,
+  "GroupDocumentId": "efc9e2d5-cd3f-4846-922d-ec11ac628d1e"
+}
+
+### publish the document
+POST {{PortfolioBackend_HostAddress}}/api/docugroup/documents/publish
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "Id": "efc9e2d5-cd3f-4846-922d-ec11ac628d1e"
+}
+
+### get the published document
+GET {{PortfolioBackend_HostAddress}}/api/docugroup/documents/efc9e2d5-cd3f-4846-922d-ec11ac628d1e
+Accept: application/json
+Authorization: Bearer {{access_token}}

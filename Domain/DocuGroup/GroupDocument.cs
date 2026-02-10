@@ -13,7 +13,7 @@ public class GroupDocument
     public DateTimeOffset CreatedAtUtc { get; set; }
     public string CreatedByUserId { get; set; } = String.Empty;
     
-    // Structural components (lock/edit per component via Redis using ComponentId).
+    // TODO Structural components (lock/edit per component via Redis using ComponentId).
     public ICollection<DocumentComponent> Components { get; set; } = new List<DocumentComponent>();
     public ICollection<Membership> Memberships { get; set; } = new List<Membership>();
     public ICollection<PublishEvent> Events { get; set; } = new List<PublishEvent>();
