@@ -68,4 +68,48 @@ public class ComponentRepository : IComponentRepository
         var component = await ReadComponentByDocumentIdAndComponentId(documentId, componentId); 
         _context.Components.Remove(component);
     }
+
+    public async Task SyncComponents(Guid documentId, IReadOnlyList<DocumentComponent> desiredComponents)
+    {
+        var existingComponents = await _context.Components
+            .Where(c => c.GroupDocumentId == documentId)
+            .ToListAsync();
+
+        // Update existing components and remove those not in desiredComponents
+        foreach (var existing in existingComponents)
+        {
+            var desired = desiredComponents.FirstOrDefault(dc => dc.Id == existing.Id);
+            if (desired != null)
+            {
+                // Update properties
+
+                existing.GroupDocumentId = documentId;
+                existing.ComponentType = desired.ComponentType;
+                existing.LastPublishedContentJson = desired.LastPublishedContentJson;
+                existing.Order = desired.Order;
+            }
+            else
+            {
+                // Remove component not in desired list
+                _context.Components.Remove(existing);
+            }
+        }
+
+        // Add new components that are in desiredComponents but not in existingComponents
+        foreach (var desired in desiredComponents)
+        {
+            if (!existingComponents.Any(ec => ec.Id == desired.Id))
+            {
+                await _context.Components.AddAsync(new DocumentComponent
+                {
+                    Id = desired.Id,
+                    GroupDocumentId = documentId,
+                    ComponentType = desired.ComponentType,
+                    LastPublishedContentJson = desired.LastPublishedContentJson,
+                    Order = desired.Order
+                });
+            }
+        }
+
+    }
 }

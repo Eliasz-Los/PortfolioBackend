@@ -5,7 +5,7 @@ namespace BL.DocuGroup.Draft;
 
 public interface IDraftDocumentManager
 {
-    Task<GroupDocument> GetDraftDocumentWithComponentsById(Guid documentId);
+    Task<DraftDocument> GetDraftDocumentWithComponentsById(Guid documentId);
     Task SaveDraftSnapshot(DraftDocument draftDocument);
     Task Remove(Guid documentId);
 }

@@ -45,7 +45,7 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "Title": "Test document"
+  "Title": "WE BALL"
 }
 
 ### add some components to the document
@@ -54,9 +54,20 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "LastPublishedContentJson": "This is a test component",
+  "LastPublishedContentJson": "WE RE HERE 222",
   "ComponentType": 1,
-  "GroupDocumentId": "efc9e2d5-cd3f-4846-922d-ec11ac628d1e"
+  "GroupDocumentId": "b829d1a1-2a5d-4c78-aa4e-71c01a86db89"
+}
+
+### add some paragraph components to the document
+POST {{PortfolioBackend_HostAddress}}/api/docugroup/components
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "LastPublishedContentJson": "This is not the end of the world, this is just the end of the chapter",
+  "ComponentType": 2,
+  "GroupDocumentId": "b829d1a1-2a5d-4c78-aa4e-71c01a86db89"
 }
 
 ### publish the document
@@ -65,10 +76,15 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "Id": "efc9e2d5-cd3f-4846-922d-ec11ac628d1e"
+  "Id": "b829d1a1-2a5d-4c78-aa4e-71c01a86db89"
 }
 
 ### get the published document
-GET {{PortfolioBackend_HostAddress}}/api/docugroup/documents/efc9e2d5-cd3f-4846-922d-ec11ac628d1e
+GET {{PortfolioBackend_HostAddress}}/api/docugroup/documents/b829d1a1-2a5d-4c78-aa4e-71c01a86db89
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+### get the Draft document
+GET {{PortfolioBackend_HostAddress}}/api/docugroup/documents/b829d1a1-2a5d-4c78-aa4e-71c01a86db89/draft
 Accept: application/json
 Authorization: Bearer {{access_token}}

@@ -8,4 +8,6 @@ public interface IComponentManager
     Task<DocumentComponent> GetComponentByDocumentIdAndComponentId(Guid documentId, Guid componentId);
     Task AddComponentForDocumentByDocumentId( AddComponentDto componentDto);
     Task RemoveComponent(Guid documentId, Guid componentId);
+    Task SyncComponentsByDocumentId(Guid documentId, IReadOnlyList<DocumentComponent> desiredComponents);
+
 }

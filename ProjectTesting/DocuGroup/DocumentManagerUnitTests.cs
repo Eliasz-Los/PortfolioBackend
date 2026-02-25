@@ -140,10 +140,8 @@ public class DocumentManagerUnitTests
     public async Task PublishDocument_UpdatesDocumentAndRemovesDraft()
     {
         var id = Guid.NewGuid();
-        var draftJson = "{ \"snapshot\": true }";
         var doc = new GroupDocument { Id = id, Title = "Old" };
 
-        _draftStore.Setup(s => s.GetDraftSnapshotJson(id)).ReturnsAsync(draftJson);
         _documentRepository.Setup(r => r.ReadDocumentById(id)).ReturnsAsync(doc);
         _draftStore.Setup(s => s.RemoveDraft(id)).Returns(Task.CompletedTask);
 
@@ -152,7 +150,6 @@ public class DocumentManagerUnitTests
         await _documentManager.PublishDocument(dto);
 
         Assert.Equal("New", doc.Title);
-        Assert.Equal(draftJson, doc.SnapshotJson);
 
         _unitOfWork.Verify(x => x.BeginTransaction(), Times.Once);
         _unitOfWork.Verify(x => x.Commit(), Times.Once);

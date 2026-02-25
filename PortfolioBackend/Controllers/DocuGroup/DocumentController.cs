@@ -23,8 +23,14 @@ public class DocumentController : ControllerBase
         _draftDocumentManager = draftDocumentManager;
     }
 
-    [HttpGet("{documentId}")]
+    [HttpGet("{documentId:guid}")]
     public async Task<IActionResult> GetDocumentById(Guid documentId)
+    {
+        var document = await _documentManager.GetDocumentWithComponentsById(documentId);
+        return Ok(document);
+    }
+    [HttpGet("{documentId:guid}/draft")]
+    public async Task<IActionResult> GetDraftDocumentById(Guid documentId)
     {
         var document = await _draftDocumentManager.GetDraftDocumentWithComponentsById(documentId);
         return Ok(document);

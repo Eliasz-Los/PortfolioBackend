@@ -1,4 +1,5 @@
 using System.Text.Json;
+using AutoMapper;
 using BL.DocuGroup.Caching;
 using BL.DocuGroup.Dto.Draft;
 using DAL.Repository.DocuGroup;
@@ -12,29 +13,39 @@ public sealed class DraftDocumentManager :  IDraftDocumentManager
     private readonly IDocumentRepository _documentRepository;
     private readonly IDraftSnapshotService _snapshotService;
     private readonly IDocumentDraftCache _draftCache;
+    private IMapper _mapper;
 
-    public DraftDocumentManager(IDraftSnapshotService snapshotService, IDocumentDraftCache draftCache, IDocumentRepository documentRepository)
+    public DraftDocumentManager(IDraftSnapshotService snapshotService, IDocumentDraftCache draftCache, IDocumentRepository documentRepository, IMapper mapper)
     {
         _snapshotService = snapshotService;
         _draftCache = draftCache;
         _documentRepository = documentRepository;
+        _mapper = mapper;
     }
 
-    public async Task<GroupDocument> GetDraftDocumentWithComponentsById(Guid documentId)
+    public async Task<DraftDocument> GetDraftDocumentWithComponentsById(Guid documentId)
     {
         var document = await _documentRepository.ReadDocumentWithComponentsById(documentId);
-         await _snapshotService.GetOrCreate(documentId);
-
-         var draftJson = await _draftCache.GetDraftSnapshotJson(documentId);
-
-         if (!string.IsNullOrWhiteSpace(draftJson))
+        
+         var draft =  await _snapshotService.GetOrCreate(documentId);
+         
+         if (draft != null)
          {
-             // We have a draft, so we overwrite the document's title and components with the draft values
-             // but not saved until actual publishing,
-             // this is just for the user to see their draft changes when they open the document again
-             document.Publish(document.Title, draftJson, document.LastPublishedAtUtc, document.LastPublishedByUserId);
+             // Merge the draft snapshot with the published document structure, but not saved to the DB yet
+             document.Title = draft.Title;
+             foreach (var component in document.Components)
+             {
+                 var draftComponent = draft.Components.FirstOrDefault(c => c.Id == component.Id);
+                 if (draftComponent != null)
+                 {
+                     component.Order = draftComponent.Order;
+                     component.LastPublishedContentJson = draftComponent.LastPublishedContentJson;
+                     component.ComponentType = draftComponent.ComponentType;
+                 }
+             }
          }
-        return document;
+
+         return draft;
     }
 
     public async Task SaveDraftSnapshot(DraftDocument draftDocument)

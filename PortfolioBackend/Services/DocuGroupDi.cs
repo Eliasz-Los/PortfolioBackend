@@ -23,16 +23,17 @@ public static class DocuGroupDi
         services.AddScoped<IComponentManager, ComponentManager>();
         services.AddScoped<IMembershipManager, MembershipManager>();
         
-        // Draft services
+        
+        // Redis cache
+        services.AddScoped<IDocumentDraftCache, DocumentDraftCache>();
+        // Draft services working with the draft cache
         services.AddScoped<IDraftSnapshotService, DraftSnapshotService>();
         services.AddScoped<IDraftDocumentManager, DraftDocumentManager>();
         services.AddScoped<IDraftComponentManager, DraftComponentManager>();
         
         // Mappers
         services.AddAutoMapper(typeof(DocumentMappingProfile));
-        // Redis cache
-        services.AddScoped<IDocumentDraftCache, DocumentDraftCache>();
-        
+        services.AddAutoMapper(typeof(ComponentMappingProfile));
         return services;
     }
 }

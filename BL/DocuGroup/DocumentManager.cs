@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Text.Json;
 using AutoMapper;
 using BL.DocuGroup.Caching;
@@ -42,9 +43,10 @@ public class DocumentManager : IDocumentManager
         _draftDocumentManager = draftDocumentManager;
     }
 
-    public async Task<GroupDocument?> GetDocumentWithComponentsById(Guid documentId)
+    public async Task<DocumentDetailsDto> GetDocumentWithComponentsById(Guid documentId)
     {
-        return await _repository.ReadDocumentWithComponentsById(documentId);
+        var document = await _repository.ReadDocumentWithComponentsById(documentId);
+        return _mapper.Map<DocumentDetailsDto>(document);
     }
 
     public async Task<IEnumerable<DocumentDto>> GetAllDocumentsByUserId(string userId)
@@ -74,19 +76,6 @@ public class DocumentManager : IDocumentManager
                 role: DocumentRole.Owner, 
                 userId: userId, 
                 lastSeenAtUtc: DateTimeOffset.UtcNow));
-         
-            /*await _componentManager.AddComponentForDocumentByDocumentId( new AddComponentDto
-            { 
-               LastPublishedContentJson = "Welcome to your new document!",
-               GroupDocumentId = newDocument.Id,
-               ComponentType = ComponentType.Title
-            });
-            await _componentManager.AddComponentForDocumentByDocumentId( new AddComponentDto
-            {
-                LastPublishedContentJson = "Here is a sample paragraph. You can edit this content.",
-                GroupDocumentId = newDocument.Id,
-                ComponentType = ComponentType.Paragraph
-            });*/
             await _uow.Commit();
             
             var snapshot = new DraftDocument
@@ -138,25 +127,27 @@ public class DocumentManager : IDocumentManager
             throw;
         }
     }
-
-    //TODO: this method instead of just saving it in the string
-    // it should save it in a structured manner
-    // saved memebers and components in the linked tables and not as part of the json string
+    
     public async Task PublishDocument(PublishDto publishDto)
     {
         await _uow.BeginTransaction();
         try
         {
-            var draft = await _draftCache.GetDraftSnapshotJson(publishDto.Id);
-            if (string.IsNullOrWhiteSpace(draft))
-            {
-                throw new InvalidOperationException($"No draft exists to publish for this documentId: {publishDto.Id}.");
-            }
-
-            var document = await _repository.ReadDocumentById(publishDto.Id);
-            document.Publish(publishDto.Title, draft, DateTimeOffset.UtcNow, publishDto.publishedByUserId);
-            await _uow.Commit(); // Here is it actually saved to the database and becomes the new published version of the document
+            var draft = await _draftDocumentManager.GetDraftDocumentWithComponentsById(publishDto.Id);
             
+            var desiredComps= draft.Components
+                .OrderBy(c => c.Order)
+                .Select(c => new DocumentComponent
+                {
+                    Id = c.Id,
+                    Order = c.Order,
+                    ComponentType = c.ComponentType,
+                    LastPublishedContentJson = c.LastPublishedContentJson
+                })
+                .ToList();
+            
+            await _componentManager.SyncComponentsByDocumentId(publishDto.Id, desiredComps);
+            await _uow.Commit(); // Here is it actually saved to the database and becomes the new published version of the document
             await _draftCache.RemoveDraft(publishDto.Id);
         }
         catch

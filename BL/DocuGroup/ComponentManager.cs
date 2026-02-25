@@ -59,7 +59,12 @@ public class ComponentManager : IComponentManager
             throw;
         }
     }
-    
+
+    public Task SyncComponentsByDocumentId(Guid documentId, IReadOnlyList<DocumentComponent> desiredComponents)
+    {
+        return _componentRepository.SyncComponents(documentId, desiredComponents);
+    }
+
     private async Task<int> GetMaxOrderForDocumentById(Guid documentId)
     {
         var components = await _componentRepository.ReadAllComponentsByDocumentId(documentId);

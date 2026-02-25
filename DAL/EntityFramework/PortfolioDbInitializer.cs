@@ -37,7 +37,7 @@ public class PortfolioDbInitializer
         var invoices = GenerateInvoicesForPatients(patients);
         context.Invoices.AddRange(invoices);
         
-        GroupDocument doc1 = new GroupDocument( 
+        /*GroupDocument doc1 = new GroupDocument( 
             Guid.NewGuid(), 
             "Project Plan", 
             DateTimeOffset.UtcNow, DateTimeOffset.UtcNow);
@@ -47,7 +47,7 @@ public class PortfolioDbInitializer
         
         doc1.Components.Add(comp1);
         doc1.Components.Add(comp2);
-        context.GroupDocuments.Add(doc1);
+        context.GroupDocuments.Add(doc1);*/
         
         context.SaveChanges();
         

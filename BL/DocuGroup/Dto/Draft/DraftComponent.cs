@@ -8,4 +8,5 @@ public sealed class DraftComponent
     public int Order { get; set; }
     public ComponentType ComponentType { get; set; }
     public string? LastPublishedContentJson { get;  set; }
+    
 }

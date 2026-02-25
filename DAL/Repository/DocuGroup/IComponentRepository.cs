@@ -12,4 +12,6 @@ public interface IComponentRepository
     Task ReorderComponent(Guid documentId, Guid componentId, int newOrder);
     Task UpdateType(Guid documentId, Guid componentId, ComponentType newType, bool clearLastPublishedContent = true);
     Task DeleteComponent(Guid documentId, Guid componentId);
+    Task SyncComponents(Guid documentId, IReadOnlyList<DocumentComponent> desiredComponents);
+
 }
