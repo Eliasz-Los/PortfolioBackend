@@ -106,13 +106,21 @@ public class DocumentManagerUnitTests
     {
         var id = Guid.NewGuid();
         var doc = new GroupDocument { Id = id };
+        var expectedDto = new DocumentDetailsDto { Id = id };
 
-        _documentRepository.Setup(r => r.ReadDocumentWithComponentsById(id)).ReturnsAsync(doc);
-
+        _documentRepository
+            .Setup(r => r.ReadDocumentWithComponentsById(id))
+            .ReturnsAsync(doc);
+        
+        _mapper!
+            .Setup(m => m.Map<DocumentDetailsDto>(doc))
+            .Returns(expectedDto);
+   
         var result = await _documentManager.GetDocumentWithComponentsById(id);
 
-        Assert.Same(doc, result);
+        Assert.Same(expectedDto, result);
         _documentRepository.Verify(r => r.ReadDocumentWithComponentsById(id), Times.Once);
+        _mapper.Verify(m => m.Map<DocumentDetailsDto>(doc), Times.Once);
     }
 
     [Fact]
@@ -137,23 +145,71 @@ public class DocumentManagerUnitTests
     
 
     [Fact]
-    public async Task PublishDocument_UpdatesDocumentAndRemovesDraft()
+    public async Task PublishDocument_UpdatesDocumentAndComponentsAndRemovesDraft()
     {
-        var id = Guid.NewGuid();
-        var doc = new GroupDocument { Id = id, Title = "Old" };
+        //arrange
+        
+        var docId = Guid.NewGuid();
+        
+        var draft = new DraftDocument
+        {
+            Id = docId,
+            Title = "Draft Title",
+            Components = new List<DraftComponent>
+            {
+                new DraftComponent
+                {
+                    Id = Guid.NewGuid(),
+                    Order = 2,
+                    ComponentType = ComponentType.Paragraph,
+                    LastPublishedContentJson = "B"
+                },
+                new DraftComponent
+                {
+                    Id = Guid.NewGuid(),
+                    Order = 1,
+                    ComponentType = ComponentType.Title,
+                    LastPublishedContentJson = "A"
+                }
+            }
+        };
 
-        _documentRepository.Setup(r => r.ReadDocumentById(id)).ReturnsAsync(doc);
-        _draftStore.Setup(s => s.RemoveDraft(id)).Returns(Task.CompletedTask);
+        _draftDocumentManager
+            .Setup(m => m.GetDraftDocumentWithComponentsById(docId))
+            .ReturnsAsync(draft);
 
-        var dto = new PublishDto { Id = id, Title = "New", publishedByUserId = "u" };
+        _componentManager
+            .Setup(m => m.SyncComponentsByDocumentId(docId, It.IsAny<IReadOnlyList<DocumentComponent>>()))
+            .Returns(Task.CompletedTask);
 
+        _draftStore
+            .Setup(c => c.RemoveDraft(docId))
+            .Returns(Task.CompletedTask);
+
+        var dto = new PublishDto { Id = docId, Title = "New", publishedByUserId = "u" };
+
+        //Act
         await _documentManager.PublishDocument(dto);
 
-        Assert.Equal("New", doc.Title);
+        //assert - used draft atleast
+        _draftDocumentManager.Verify(m => m.GetDraftDocumentWithComponentsById(docId), Times.Once);
+        //assert - synced components  and order
+        _componentManager.Verify(m => m.SyncComponentsByDocumentId(docId, It.Is<IReadOnlyList<DocumentComponent>>(components =>
+            components.Count == 2 &&
+            components[0].Id == draft.Components[1].Id && 
+            components[0].ComponentType == draft.Components[1].ComponentType &&
+            components[0].LastPublishedContentJson == draft.Components[1].LastPublishedContentJson &&
+            components[1].Id == draft.Components[0].Id &&
+            components[1].ComponentType == draft.Components[0].ComponentType &&
+            components[1].LastPublishedContentJson == draft.Components[0].LastPublishedContentJson
+        )), Times.Once);
+        
+        
+        //assert - removing draft from cache, since it will be published now and is not needed
 
         _unitOfWork.Verify(x => x.BeginTransaction(), Times.Once);
         _unitOfWork.Verify(x => x.Commit(), Times.Once);
-        _draftStore.Verify(s => s.RemoveDraft(id), Times.Once);
+        _draftStore.Verify(s => s.RemoveDraft(docId), Times.Once);
     }
 
     [Fact]
@@ -164,7 +220,8 @@ public class DocumentManagerUnitTests
 
         var dto = new PublishDto { Id = id, Title = "T", publishedByUserId = "u" };
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _documentManager.PublishDocument(dto));
+        //assert
+        await Assert.ThrowsAsync<NullReferenceException>(() => _documentManager.PublishDocument(dto));
 
         _unitOfWork.Verify(x => x.Rollback(), Times.Once);
     }

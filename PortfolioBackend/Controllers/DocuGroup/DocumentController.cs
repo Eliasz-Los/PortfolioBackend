@@ -96,16 +96,11 @@ public class DocumentController : ControllerBase
         Response.Headers.Append("Cache-Control", "no-cache");
         Response.Headers.Append("Connection", "keep-alive");
 
-        // If behind nginx, this helps:
+        // If behind nginx, this can help in the future 
         Response.Headers.Append("X-Accel-Buffering", "no");
 
         var reader = broker.Subscribe(documentId);
-
-        // Optional: initial hello event
-        await Response.WriteAsync("event: hello\n");
-        await Response.WriteAsync($"data: {{\"documentId\":\"{documentId}\"}}\n\n");
-        await Response.Body.FlushAsync();
-
+        
         await foreach (var evt in reader.ReadAllAsync(HttpContext.RequestAborted))
         {
             var json = JsonSerializer.Serialize(evt, new JsonSerializerOptions(JsonSerializerDefaults.Web));

@@ -12,6 +12,7 @@
 - PostgreSQL
 - Redis
 - Keycloak (for authentication and authorization)
+- SSE (Server-Sent Events) for real-time updates in DocuGroup module
 
 ## How to run
 - run `dotnet restore` to install dependencies
@@ -21,5 +22,12 @@
 - application will be available at `http://localhost:5266`
 - Keycloak will be available at `http://localhost:8080` (username: admin, password: admin)
 - to run tests, navigate to the test project and run `dotnet test`
+
+
+## SSE (Server-Sent Events) in DocuGroup module
+- Used to send real-time updates to clients when changes are made to documents
+- Clients can subscribe to updates for specific documents and receive notifications when changes occur
+- Implmented in InMemoryEventDocumentEventBroker so that it can be easily switched to a different event broker (e.g. Redis pub/sub) in the future
+- 
 
 
