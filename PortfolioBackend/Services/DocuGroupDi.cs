@@ -1,6 +1,7 @@
 using BL.DocuGroup;
 using BL.DocuGroup.Caching;
 using BL.DocuGroup.Draft;
+using BL.DocuGroup.Events;
 using BL.DocuGroup.Mapper;
 using DAL.Repository.DocuGroup;
 using DAL.Repository.UoW;
@@ -34,6 +35,9 @@ public static class DocuGroupDi
         // Mappers
         services.AddAutoMapper(typeof(DocumentMappingProfile));
         services.AddAutoMapper(typeof(ComponentMappingProfile));
+        
+        // Server Sent Events (in memory for now)
+        services.AddSingleton<IDocumentEventBroker, InMemoryDocumentEventBroker>();
         return services;
     }
 }

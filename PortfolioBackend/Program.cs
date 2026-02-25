@@ -52,6 +52,22 @@ builder.Services
         
         options.Events = new JwtBearerEvents
         {
+            OnMessageReceived = context =>
+            {
+                // Allow JWT in query string ONLY for SSE endpoint
+                var path = context.HttpContext.Request.Path;
+
+                if (path.StartsWithSegments("/api/docugroup/documents") &&
+                    path.Value!.EndsWith("/events", StringComparison.OrdinalIgnoreCase))
+                {
+                    var token = context.Request.Query["access_token"].ToString();
+                    if (!string.IsNullOrWhiteSpace(token))
+                        context.Token = token;
+                }
+
+                return Task.CompletedTask;
+            },
+            
             OnTokenValidated = context =>
             {
                 if (context.Principal?.Identity is not ClaimsIdentity identity)

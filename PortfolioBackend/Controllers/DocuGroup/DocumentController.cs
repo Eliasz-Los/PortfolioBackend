@@ -1,7 +1,9 @@
 using System.Security.Claims;
+using System.Text.Json;
 using BL.DocuGroup;
 using BL.DocuGroup.Draft;
 using BL.DocuGroup.Dto.Document;
+using BL.DocuGroup.Events;
 using Domain.DocuGroup;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -84,6 +86,35 @@ public class DocumentController : ControllerBase
         await _documentManager.PublishDocument(publishDto);
         return Ok();
     }
-    
-    
+
+
+    [HttpGet("{documentId:guid}/events")]
+    public async Task Events(Guid documentId, 
+        [FromServices] IDocumentEventBroker broker) 
+    {
+        Response.Headers.Append("Content-Type", "text/event-stream");
+        Response.Headers.Append("Cache-Control", "no-cache");
+        Response.Headers.Append("Connection", "keep-alive");
+
+        // If behind nginx, this helps:
+        Response.Headers.Append("X-Accel-Buffering", "no");
+
+        var reader = broker.Subscribe(documentId);
+
+        // Optional: initial hello event
+        await Response.WriteAsync("event: hello\n");
+        await Response.WriteAsync($"data: {{\"documentId\":\"{documentId}\"}}\n\n");
+        await Response.Body.FlushAsync();
+
+        await foreach (var evt in reader.ReadAllAsync(HttpContext.RequestAborted))
+        {
+            var json = JsonSerializer.Serialize(evt, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+
+            await Response.WriteAsync($"event: {evt.Type}\n");
+            await Response.WriteAsync($"data: {json}\n\n");
+            await Response.Body.FlushAsync();
+        }
+        
+    }
+
 }
