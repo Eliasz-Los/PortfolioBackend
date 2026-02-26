@@ -7,6 +7,7 @@ using BL.DocuGroup.Events;
 using Domain.DocuGroup;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace PortfolioBackend.Controllers.DocuGroup;
 
@@ -90,7 +91,8 @@ public class DocumentController : ControllerBase
 
     [HttpGet("{documentId:guid}/events")]
     public async Task Events(Guid documentId, 
-        [FromServices] IDocumentEventBroker broker) 
+        [FromServices] IDocumentEventBroker broker,
+        [FromServices] IOptions<JsonOptions> jsonOptions) 
     {
         Response.Headers.Append("Content-Type", "text/event-stream");
         Response.Headers.Append("Cache-Control", "no-cache");
@@ -103,7 +105,7 @@ public class DocumentController : ControllerBase
         
         await foreach (var evt in reader.ReadAllAsync(HttpContext.RequestAborted))
         {
-            var json = JsonSerializer.Serialize(evt, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+            var json = JsonSerializer.Serialize(evt, jsonOptions.Value.JsonSerializerOptions);
 
             await Response.WriteAsync($"event: {evt.Type}\n");
             await Response.WriteAsync($"data: {json}\n\n");

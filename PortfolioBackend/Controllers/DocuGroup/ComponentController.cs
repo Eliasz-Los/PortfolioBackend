@@ -21,6 +21,7 @@ public class ComponentController : ControllerBase
         _componentManager = componentManager;
     }
     
+    /*TODO return the added resource so we get the new order*/
     [HttpPost]
     public async Task<IActionResult> AddComponentToDocument(AddComponentDto componentDto,
         [FromServices] IDocumentEventBroker broker)
